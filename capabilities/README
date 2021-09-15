@@ -1,0 +1,1 @@
+gcc capsettest.c -o capsettest -lcap

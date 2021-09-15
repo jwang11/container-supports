@@ -1,0 +1,127 @@
+HTTP/1.1 200 OK
+content-length: 13274
+content-type: application/vnd.docker.distribution.manifest.v1+prettyjws
+docker-content-digest: sha256:6f9356a43e76c7c4802fa52b69bf1082194be74274e5154080c0a1f6f343fd39
+docker-distribution-api-version: registry/2.0
+etag: "sha256:6f9356a43e76c7c4802fa52b69bf1082194be74274e5154080c0a1f6f343fd39"
+date: Tue, 07 Sep 2021 08:49:04 GMT
+strict-transport-security: max-age=31536000
+ratelimit-limit: 100;w=21600
+ratelimit-remaining: 99;w=21600
+
+{
+   "schemaVersion": 1,
+   "name": "library/nginx",
+   "tag": "latest",
+   "architecture": "amd64",
+   "fsLayers": [
+      {
+         "blobSum": "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4"
+      },
+      {
+         "blobSum": "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4"
+      },
+      {
+         "blobSum": "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4"
+      },
+      {
+         "blobSum": "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4"
+      },
+      {
+         "blobSum": "sha256:ddb78cb2d04781d479f6781bf604d64440fcefdc985224ad4d957b4a52cbbe16"
+      },
+      {
+         "blobSum": "sha256:3229dce7b89cc47d414b62b27d7464f86f2f1e34e68ba2763ebb92468b875e3e"
+      },
+      {
+         "blobSum": "sha256:0f701a34c55e98febadb75cc43e8c3401895cf494f8a4762692814a2c1faa758"
+      },
+      {
+         "blobSum": "sha256:f699b0db74e30a70ad7ab10fcb6209947934fdf511639c90f8d721418e4bd6cb"
+      },
+      {
+         "blobSum": "sha256:5ef80e6f29b5d942ad2be4a08fbefc222837246692294f1688a9fdc89904df0a"
+      },
+      {
+         "blobSum": "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4"
+      },
+      {
+         "blobSum": "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4"
+      },
+      {
+         "blobSum": "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4"
+      },
+      {
+         "blobSum": "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4"
+      },
+      {
+         "blobSum": "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4"
+      },
+      {
+         "blobSum": "sha256:a330b6cecb98cd2425fd25fce36669073f593b3176b4ee14731e48c05d678cdd"
+      }
+   ],
+   "history": [
+      {
+         "v1Compatibility": "{\"architecture\":\"amd64\",\"config\":{\"Hostname\":\"\",\"Domainname\":\"\",\"User\":\"\",\"AttachStdin\":false,\"AttachStdout\":false,\"AttachStderr\":false,\"ExposedPorts\":{\"80/tcp\":{}},\"Tty\":false,\"OpenStdin\":false,\"StdinOnce\":false,\"Env\":[\"PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\",\"NGINX_VERSION=1.21.1\",\"NJS_VERSION=0.6.1\",\"PKG_RELEASE=1~buster\"],\"Cmd\":[\"nginx\",\"-g\",\"daemon off;\"],\"Image\":\"sha256:d4315787e4fec867791beba140dd0e44f657cb6e4a9d75c676c7946089c20da9\",\"Volumes\":null,\"WorkingDir\":\"\",\"Entrypoint\":[\"/docker-entrypoint.sh\"],\"OnBuild\":null,\"Labels\":{\"maintainer\":\"NGINX Docker Maintainers \\u003cdocker-maint@nginx.com\\u003e\"},\"StopSignal\":\"SIGQUIT\"},\"container\":\"367d32086ac12447d36e75c9b7acbe1b5156a34a91370b9200e68783be75506c\",\"container_config\":{\"Hostname\":\"367d32086ac1\",\"Domainname\":\"\",\"User\":\"\",\"AttachStdin\":false,\"AttachStdout\":false,\"AttachStderr\":false,\"ExposedPorts\":{\"80/tcp\":{}},\"Tty\":false,\"OpenStdin\":false,\"StdinOnce\":false,\"Env\":[\"PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\",\"NGINX_VERSION=1.21.1\",\"NJS_VERSION=0.6.1\",\"PKG_RELEASE=1~buster\"],\"Cmd\":[\"/bin/sh\",\"-c\",\"#(nop) \",\"CMD [\\\"nginx\\\" \\\"-g\\\" \\\"daemon off;\\\"]\"],\"Image\":\"sha256:d4315787e4fec867791beba140dd0e44f657cb6e4a9d75c676c7946089c20da9\",\"Volumes\":null,\"WorkingDir\":\"\",\"Entrypoint\":[\"/docker-entrypoint.sh\"],\"OnBuild\":null,\"Labels\":{\"maintainer\":\"NGINX Docker Maintainers \\u003cdocker-maint@nginx.com\\u003e\"},\"StopSignal\":\"SIGQUIT\"},\"created\":\"2021-09-03T07:40:16.355730864Z\",\"docker_version\":\"20.10.7\",\"id\":\"a6bda596d7248c37163baa8a5fdef66c0c7fe61ce5699b94d04ca5b62716193f\",\"os\":\"linux\",\"parent\":\"5c7b7a0e5ab64c72885df532b3ec2b31836798d0b69a1041d133d26dbb61cf21\",\"throwaway\":true}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"5c7b7a0e5ab64c72885df532b3ec2b31836798d0b69a1041d133d26dbb61cf21\",\"parent\":\"451bc4e5a815e38b4e2d5ac6938c94433dcb82df6960163fc6a5fedc9788ca93\",\"created\":\"2021-09-03T07:40:16.121208069Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c #(nop)  STOPSIGNAL SIGQUIT\"]},\"throwaway\":true}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"451bc4e5a815e38b4e2d5ac6938c94433dcb82df6960163fc6a5fedc9788ca93\",\"parent\":\"60db3d49822cef7aefe8668efd78da564f621f3bb7638a0bdbee8b1c600f168a\",\"created\":\"2021-09-03T07:40:15.803929784Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c #(nop)  EXPOSE 80\"]},\"throwaway\":true}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"60db3d49822cef7aefe8668efd78da564f621f3bb7638a0bdbee8b1c600f168a\",\"parent\":\"0e5082cc57cd1047a8b71445ce33bf3e37bcf82a8c775b8118b660dfdd20ed6d\",\"created\":\"2021-09-03T07:40:15.495473863Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c #(nop)  ENTRYPOINT [\\\"/docker-entrypoint.sh\\\"]\"]},\"throwaway\":true}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"0e5082cc57cd1047a8b71445ce33bf3e37bcf82a8c775b8118b660dfdd20ed6d\",\"parent\":\"0d715aaff8a07a2edcd513fd7544dc6f1ebd939294b0aaac11467352df395b02\",\"created\":\"2021-09-03T07:40:15.203600861Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c #(nop) COPY file:09a214a3e07c919af2fb2d7c749ccbc446b8c10eb217366e5a65640ee9edcc25 in /docker-entrypoint.d \"]}}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"0d715aaff8a07a2edcd513fd7544dc6f1ebd939294b0aaac11467352df395b02\",\"parent\":\"562df428ac544946a9b5f42a5327315613ce1532137e70b759bccd5a2413ca75\",\"created\":\"2021-09-03T07:40:14.732546795Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c #(nop) COPY file:0fd5fca330dcd6a7de297435e32af634f29f7132ed0550d342cad9fd20158258 in /docker-entrypoint.d \"]}}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"562df428ac544946a9b5f42a5327315613ce1532137e70b759bccd5a2413ca75\",\"parent\":\"dcadc3d413312f674d46dc4297a5a59282aa0f592991927e714f9bddcc01f226\",\"created\":\"2021-09-03T07:40:14.368732365Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c #(nop) COPY file:0b866ff3fc1ef5b03c4e6c8c513ae014f691fb05d530257dfffd07035c1b75da in /docker-entrypoint.d \"]}}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"dcadc3d413312f674d46dc4297a5a59282aa0f592991927e714f9bddcc01f226\",\"parent\":\"6c17cb7bc1b90db2bb3008ec2ced39b460903488a84d4c8fa5ecd1868a7a0000\",\"created\":\"2021-09-03T07:40:13.897508525Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c #(nop) COPY file:65504f71f5855ca017fb64d502ce873a31b2e0decd75297a8fb0a287f97acf92 in / \"]}}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"6c17cb7bc1b90db2bb3008ec2ced39b460903488a84d4c8fa5ecd1868a7a0000\",\"parent\":\"4b4738fef05d3e28fa44ef089cef15943f0d29e25058ff8cd98f8ceb27167d62\",\"created\":\"2021-09-03T07:40:13.142111877Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c set -x     \\u0026\\u0026 addgroup --system --gid 101 nginx     \\u0026\\u0026 adduser --system --disabled-login --ingroup nginx --no-create-home --home /nonexistent --gecos \\\"nginx user\\\" --shell /bin/false --uid 101 nginx     \\u0026\\u0026 apt-get update     \\u0026\\u0026 apt-get install --no-install-recommends --no-install-suggests -y gnupg1 ca-certificates     \\u0026\\u0026     NGINX_GPGKEY=573BFD6B3D8FBC641079A6ABABF5BD827BD9BF62;     found='';     for server in         ha.pool.sks-keyservers.net         hkp://keyserver.ubuntu.com:80         hkp://p80.pool.sks-keyservers.net:80         pgp.mit.edu     ; do         echo \\\"Fetching GPG key $NGINX_GPGKEY from $server\\\";         apt-key adv --keyserver \\\"$server\\\" --keyserver-options timeout=10 --recv-keys \\\"$NGINX_GPGKEY\\\" \\u0026\\u0026 found=yes \\u0026\\u0026 break;     done;     test -z \\\"$found\\\" \\u0026\\u0026 echo \\u003e\\u00262 \\\"error: failed to fetch GPG key $NGINX_GPGKEY\\\" \\u0026\\u0026 exit 1;     apt-get remove --purge --auto-remove -y gnupg1 \\u0026\\u0026 rm -rf /var/lib/apt/lists/*     \\u0026\\u0026 dpkgArch=\\\"$(dpkg --print-architecture)\\\"     \\u0026\\u0026 nginxPackages=\\\"         nginx=${NGINX_VERSION}-${PKG_RELEASE}         nginx-module-xslt=${NGINX_VERSION}-${PKG_RELEASE}         nginx-module-geoip=${NGINX_VERSION}-${PKG_RELEASE}         nginx-module-image-filter=${NGINX_VERSION}-${PKG_RELEASE}         nginx-module-njs=${NGINX_VERSION}+${NJS_VERSION}-${PKG_RELEASE}     \\\"     \\u0026\\u0026 case \\\"$dpkgArch\\\" in         amd64|i386|arm64)             echo \\\"deb https://nginx.org/packages/mainline/debian/ buster nginx\\\" \\u003e\\u003e /etc/apt/sources.list.d/nginx.list             \\u0026\\u0026 apt-get update             ;;         *)             echo \\\"deb-src https://nginx.org/packages/mainline/debian/ buster nginx\\\" \\u003e\\u003e /etc/apt/sources.list.d/nginx.list                         \\u0026\\u0026 tempDir=\\\"$(mktemp -d)\\\"             \\u0026\\u0026 chmod 777 \\\"$tempDir\\\"                         \\u0026\\u0026 savedAptMark=\\\"$(apt-mark showmanual)\\\"                         \\u0026\\u0026 apt-get update             \\u0026\\u0026 apt-get build-dep -y $nginxPackages             \\u0026\\u0026 (                 cd \\\"$tempDir\\\"                 \\u0026\\u0026 DEB_BUILD_OPTIONS=\\\"nocheck parallel=$(nproc)\\\"                     apt-get source --compile $nginxPackages             )                         \\u0026\\u0026 apt-mark showmanual | xargs apt-mark auto \\u003e /dev/null             \\u0026\\u0026 { [ -z \\\"$savedAptMark\\\" ] || apt-mark manual $savedAptMark; }                         \\u0026\\u0026 ls -lAFh \\\"$tempDir\\\"             \\u0026\\u0026 ( cd \\\"$tempDir\\\" \\u0026\\u0026 dpkg-scanpackages . \\u003e Packages )             \\u0026\\u0026 grep '^Package: ' \\\"$tempDir/Packages\\\"             \\u0026\\u0026 echo \\\"deb [ trusted=yes ] file://$tempDir ./\\\" \\u003e /etc/apt/sources.list.d/temp.list             \\u0026\\u0026 apt-get -o Acquire::GzipIndexes=false update             ;;     esac         \\u0026\\u0026 apt-get install --no-install-recommends --no-install-suggests -y                         $nginxPackages                         gettext-base                         curl     \\u0026\\u0026 apt-get remove --purge --auto-remove -y \\u0026\\u0026 rm -rf /var/lib/apt/lists/* /etc/apt/sources.list.d/nginx.list         \\u0026\\u0026 if [ -n \\\"$tempDir\\\" ]; then         apt-get purge -y --auto-remove         \\u0026\\u0026 rm -rf \\\"$tempDir\\\" /etc/apt/sources.list.d/temp.list;     fi     \\u0026\\u0026 ln -sf /dev/stdout /var/log/nginx/access.log     \\u0026\\u0026 ln -sf /dev/stderr /var/log/nginx/error.log     \\u0026\\u0026 mkdir /docker-entrypoint.d\"]}}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"4b4738fef05d3e28fa44ef089cef15943f0d29e25058ff8cd98f8ceb27167d62\",\"parent\":\"5746e298090ae29acdc42422951b6b24120b6c13f5ada66d38605059f7020919\",\"created\":\"2021-09-03T07:39:36.675392149Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c #(nop)  ENV PKG_RELEASE=1~buster\"]},\"throwaway\":true}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"5746e298090ae29acdc42422951b6b24120b6c13f5ada66d38605059f7020919\",\"parent\":\"0ca626f9ee01ee7c2b9f93a0af9281055136b729d293591a5189eb9f6e23f1cb\",\"created\":\"2021-09-03T07:39:36.387902701Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c #(nop)  ENV NJS_VERSION=0.6.1\"]},\"throwaway\":true}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"0ca626f9ee01ee7c2b9f93a0af9281055136b729d293591a5189eb9f6e23f1cb\",\"parent\":\"505c936535a73a96c40f14b7652db41d3befe1fdadbc729e2a74c3850ec8a244\",\"created\":\"2021-09-03T07:39:35.987833522Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c #(nop)  ENV NGINX_VERSION=1.21.1\"]},\"throwaway\":true}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"505c936535a73a96c40f14b7652db41d3befe1fdadbc729e2a74c3850ec8a244\",\"parent\":\"14d0dfd633f4a9e491b2f293dfe92dc70c215fc8ec41d53ee621803f34554c79\",\"created\":\"2021-09-03T07:39:35.716288163Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c #(nop)  LABEL maintainer=NGINX Docker Maintainers \\u003cdocker-maint@nginx.com\\u003e\"]},\"throwaway\":true}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"14d0dfd633f4a9e491b2f293dfe92dc70c215fc8ec41d53ee621803f34554c79\",\"parent\":\"e41adbd1cb5b9c03497ac33c3f5018d40b74d250403fd4026f2d37330c560040\",\"created\":\"2021-09-03T01:21:46.935145833Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c #(nop)  CMD [\\\"bash\\\"]\"]},\"throwaway\":true}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"e41adbd1cb5b9c03497ac33c3f5018d40b74d250403fd4026f2d37330c560040\",\"created\":\"2021-09-03T01:21:46.511313656Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c #(nop) ADD file:4ff85d9f6aa246746912db62dea02eb71750474bb29611e770516a1fcd217add in / \"]}}"
+      }
+   ],
+   "signatures": [
+      {
+         "header": {
+            "jwk": {
+               "crv": "P-256",
+               "kid": "M3CF:ANI3:DFW2:XEBF:NPDF:F736:DQ2O:YO4S:D2RP:UKVU:K7CK:27MM",
+               "kty": "EC",
+               "x": "2BrHYrSUUJ8GAGuSN3fp3QAW-wUI0pUGOvsdIWMKQOI",
+               "y": "in27CF-CsEzzOgT2ggv5hXKq6k_hgVQz1xiP1a_jOBY"
+            },
+            "alg": "ES256"
+         },
+         "signature": "BJZlyXXXUrVqag2gLCzJJVQA8HwBMSserGjYDKSdWWcBymrRFPOwkNy5kWbGaPDgScTAVG3RRzCZdpwjdOmRiw",
+         "protected": "eyJmb3JtYXRMZW5ndGgiOjEyNjI2LCJmb3JtYXRUYWlsIjoiQ24wIiwidGltZSI6IjIwMjEtMDktMDdUMDg6NDk6MDRaIn0"
+      }
+   ]
+}
