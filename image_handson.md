@@ -79,3 +79,33 @@ $ cat imagedb/content/sha256/69593048aa3acfee0f75f20b77acb549de2472063053f6730c4
   }
 }
 ```
+
+### overlayfs实战
+```
+终端1：
+$ docker info
+...
+ Images: 2
+ Server Version: 20.10.2
+ Storage Driver: overlay2
+  Backing Filesystem: extfs
+  Supports d_type: true
+  Native Overlay Diff: true
+
+$tree overlayfs-test/
+overlayfs-test/
+├── Fruits
+│   ├── Apple
+│   ├── Orange
+│   └── Tomato
+├── Meat
+│   ├── Beef
+│   ├── cccc
+│   └── Pork
+├── Vegetables
+│   ├── Carrots
+│   └── Tomato
+└── work
+
+ $mount -t overlay overlay -o lowerdir=Fruits:Vegetables,upperdir=Meat,workdir=work /mnt/tmp
+```
