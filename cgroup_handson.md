@@ -87,3 +87,58 @@ $ sudo unshare --fork --net bash
 $ ifconfig
 
 ```
+
+### User Namespace
+
+- 终端1：
+```diff
+$ id
+uid=1000(jwang) gid=1000(jwang) groups=1000(jwang),4(adm),24(cdrom),27(sudo),30(dip),46(plugdev),120(lpadmin),131(lxd),132(sambashare),133(docker)
+
+$ readlink /proc/$$/ns/user
+user:[4026531837]
+
+$unshare --user /bin/bash
+nobody@jwang-desktop:~$
+
+nobody@jwang-desktop:~$ readlink /proc/$$/ns/user
+user:[4026532349]
+
+nobody@jwang-desktop:~$ id
+uid=65534(nobody) gid=65534(nogroup) groups=65534(nogroup)
+
+nobody@jwang-desktop:~$ echo $$
+16100
+
+nobody@jwang-desktop:~$ cat /proc/$$/uid_map
+空的
+```
+
+- 终端2
+```diff
+$ cat /proc/$$/status | egrep 'Cap(Inh|Prm|Eff)'
+CapInh: 0000000000000000
+CapPrm: 0000000000000000
+CapEff: 0000000000000000
+
+$ sudo setcap cap_setgid,cap_setuid+ep /bin/bash
+$ exec bash
+$ cat /proc/$$/status | egrep 'Cap(Inh|Prm|Eff)'
+CapInh: 0000000000000000
+CapPrm: 00000000000000c0
+CapEff: 00000000000000c0
+
+$ echo '0 1000 1' > /proc/16100/uid_map
+
+$ echo '0 1000 1' > /proc/16100/gid_map
+```
+
+
+- 终端1
+```diff
+nobody@jwang-desktop:~$ id
+uid=0(root) gid=0(root) groups=0(root),65534(nogroup)
+
+nobody@jwang-desktop:~$ exec bash
+root@jwang-desktop:~#
+```
