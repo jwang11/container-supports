@@ -77,7 +77,7 @@ system.slice/snap-gnome\x2d3\x2d34\x2d1804-66.mount                             
 system.slice/snap-gnome\x2d3\x2d34\x2d1804-72.mount                                  -      -     8.0K        -       
 ```
 
-- 资源控制
+### cgroup资源控制
 ```diff
 - #创建控制群组
 $ cgcreate -g cpu:/g1
