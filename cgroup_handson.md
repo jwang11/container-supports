@@ -76,3 +76,32 @@ system.slice/snap-core18-2128.mount                                             
 system.slice/snap-gnome\x2d3\x2d34\x2d1804-66.mount                                  -      -     8.0K        -        -
 system.slice/snap-gnome\x2d3\x2d34\x2d1804-72.mount                                  -      -     8.0K        -       
 ```
+
+- 资源控制
+```diff
+- #创建控制群组
+$ cgcreate -g cpu:/g1
+说明：这个命令会创建/sys/fs/cgroup/cpu/g1目录出来，在这个目录下有各种cgroup cpu的配置文件;
+
+- #设置CPU限制参数
+$ cgset -r cpu.cfs_quota_us=20000 g1
+#查看是否设置成功
+$ cgget -r cpu.cfs_quota_us g1
+
+- #启动进程，通过top可以看到cpu占用100%，同时拿到进程pid：2231
+$cat t1.sh
+$ /bin/bash
+x=0
+while [ True ];do
+    x=$x+1
+done;
+$ sh  /tmp/t1.sh  &
+
+- #将此进程加入控制群组g1
+$ cgclassify -g cpu:/g1 2231
+$ cat /sys/fs/cgroup/cpu/g1/tasks
+
+- 通过top看，cpu消耗变成了20%
+- 注意：最好将一个进程写在一个控制组内；将多个进程写在一个控制组会共享cpu限制；
+- 如：在一个控制组内写入3个进程，cpu限制使用为20%，每个进程大概会占6%左右；
+```
