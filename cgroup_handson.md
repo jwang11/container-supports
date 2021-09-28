@@ -80,3 +80,10 @@ UID          PID    PPID  C STIME TTY          TIME CMD
 root           1       0  0 18:28 pts/2    00:00:00 bash
 root           8       1  0 18:28 pts/2    00:00:00 ps -ef
 ```
+
+### Net Namespace
+```diff
+$ sudo unshare --fork --net bash
+$ ifconfig
+
+```
