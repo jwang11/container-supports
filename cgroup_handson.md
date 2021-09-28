@@ -70,3 +70,13 @@ systemd(1)─┬─ModemManager(722)─┬─{ModemManager}(745)
            │                        └─{containerd-shim}(12114)
 
 ```
+
+### Mount Namespace
+```diff
+- // --mount-proc含义是在新进程起来之前，把/proc在新的namespace下挂载一下，否则是parent的copy
+$ sudo unshare --pid --fork --mount-proc bash
+$ ps -ef
+UID          PID    PPID  C STIME TTY          TIME CMD
+root           1       0  0 18:28 pts/2    00:00:00 bash
+root           8       1  0 18:28 pts/2    00:00:00 ps -ef
+```
