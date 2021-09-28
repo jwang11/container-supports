@@ -1,6 +1,23 @@
-### 实战
+## 实战
 
-#### PID Namespace
+
+### 进程和Namespace
+```
+root@jwang-desktop:~# sudo ls -l /proc/$$/ns
+total 0
+lrwxrwxrwx 1 root root 0 9月  28 15:55 cgroup -> 'cgroup:[4026531835]'
+lrwxrwxrwx 1 root root 0 9月  28 15:55 ipc -> 'ipc:[4026531839]'
+lrwxrwxrwx 1 root root 0 9月  28 15:55 mnt -> 'mnt:[4026531840]'
+lrwxrwxrwx 1 root root 0 9月  28 15:55 net -> 'net:[4026532008]'
+lrwxrwxrwx 1 root root 0 9月  28 15:55 pid -> 'pid:[4026531836]'
+lrwxrwxrwx 1 root root 0 9月  28 15:55 pid_for_children -> 'pid:[4026531836]'
+lrwxrwxrwx 1 root root 0 9月  28 15:55 time -> 'time:[4026531834]'
+lrwxrwxrwx 1 root root 0 9月  28 15:55 time_for_children -> 'time:[4026531834]'
+lrwxrwxrwx 1 root root 0 9月  28 15:55 user -> 'user:[4026531837]'
+lrwxrwxrwx 1 root root 0 9月  28 15:55 uts -> 'uts:[4026531838]'
+```
+
+### PID Namespace
 - 终端1：
 ```diff
 $ sudo unshare --fork --pid bash
