@@ -1,8 +1,16 @@
 # 实战
 
-## OCI image格式
-- Docker config文件
-```
+## OCI image格式（用docker）
+- oci config文件
+```diff
+$ docker image list
+REPOSITORY    TAG       IMAGE ID       CREATED        SIZE
+nginx         latest    4cdc5dd7eaad   2 months ago   133MB
+busybox       latest    69593048aa3a   3 months ago   1.24MB
+hello-world   latest    d1165f221234   6 months ago   13.3kB
+
++ image_id 其实就是image的config的digest(12位）
+
 $cd /var/lib/docker/image/overlay2/
 $ cat imagedb/content/sha256/69593048aa3acfee0f75f20b77acb549de2472063053f6730c4091b53f2dfb02 |jq
 {
@@ -80,8 +88,9 @@ $ cat imagedb/content/sha256/69593048aa3acfee0f75f20b77acb549de2472063053f6730c4
 }
 ```
 
-- 在看一个多层的config
+- 再看一个多层的config (nginx)
 ```
+$ cat imagedb/content/sha256/4cdc5dd7eaadff5080649e8d0014f2f8d36d4ddf2eff2fdf577dd13da85c5d2f |jq
 {
   "architecture": "amd64",
   "config": {
@@ -167,6 +176,7 @@ $ cat imagedb/content/sha256/69593048aa3acfee0f75f20b77acb549de2472063053f6730c4
   "rootfs": {
     "type": "layers",
     "diff_ids": [
+- 每一层是diff_id，也就是该层内容的digest(sha256)    
       "sha256:764055ebc9a7a290b64d17cf9ea550f1099c202d83795aa967428ebdf335c9f7",
       "sha256:ace9ed9bcfafbc909bc3e9451490652f685959db02a4e01e0528a868ee8eab3e",
       "sha256:48b4a40de3597ec0a28c2d4508dec64ae685ed0da77b128d0fb5c69cada91882",
@@ -177,6 +187,48 @@ $ cat imagedb/content/sha256/69593048aa3acfee0f75f20b77acb549de2472063053f6730c4
   }
 }
 ```
+- layerdb里的目录名不是diff_id，而是chain_id。diff_id是保护当前层，用chain_id是保护层与层之间联系
+```diff
+ls layerdb/sha256/
+1a28317a62c8193a2cd9513ed55b4e9beddb850fe397249eea2ee5044192779f/
+2c78bcd3187437a7a5d9d8dbf555b3574ba7d143c1852860f9df0a46d5df056a/
+2e17f8770b4ad4ce56357edc8dea7329f376803e703201f45141d044634c20e3/
+2f06529dbb5e44e14d5ab0d7ecd6d4926db08124dbb1b4cbc75710a3b540aa17/
+33d9996f6196b7459c2fff2af3c499c293df089085845401bec2ebda281b86d8/
+4311d44226850ccb1c676c541d5a8cbfaa8a8fbbcbce7470f63f73de3b095452/
+435c6dad68b58885ad437e5f35f53e071213134eb9e4932b445eac7b39170700/
+4e006334a6fdea37622f72b21eb75fe1484fc4f20ce8b8526187d6f7bd90a6fe/
+5b8c72934dfc08c7d2bd707e93197550f06c0751023dabb3a045b723c5e7b373/
+63d268dd303e176ba45c810247966ff8d1cb9a5bce4a404584087ec01c63de15/
+6bb8e6547520704f53cd85d941447e9088a1c9929b2f7357374c4ca423f12a84/
+- // 这是nginx第1层，diff_id刚好等于chain_id
+764055ebc9a7a290b64d17cf9ea550f1099c202d83795aa967428ebdf335c9f7/
+7eab6969712beb0bd29a9c67e028a9c0cb8c623860966d53354e2f2bcb534fdf/
+b27eb5bbca70862681631b492735bac31d3c1c558c774aca9c0e36f1b50ba915/
+bdf28aff423adfe7c6cb938eced2f19a32efa9fa3922a3c5ddce584b139dc864/
+d8cb195252a723d5f1dfe5f168cc1268255f5d53d836a176636bdea1acb39b4b/
+ecd3e268e3ec6c7018720438d572bad85c7254440164e0bd326841f70bccdade/
+f22b99068db93900abe17f7f5e09ec775c2826ecfe9db961fea68293744144bd/
+```
+- 以nginx为例，看看diff_id和chain_id推算
+>> ChainID(layerN) = SHA256hex(ChainID(layerN-1) + " " + DiffID(layerN))
+
+1. 第一层 diff_id = chain_id = sha256:764055ebc9a7a290b64d17cf9ea550f1099c202d83795aa967428ebdf335c9f7
+2. 第二层 diff_id = sha256:ace9ed9bcfafbc909bc3e9451490652f685959db02a4e01e0528a868ee8eab3e
+```diff
+$echo -n "sha256:764055ebc9a7a290b64d17cf9ea550f1099c202d83795aa967428ebdf335c9f7 sha256:ace9ed9bcfafbc909bc3e9451490652f685959db02a4e01e0528a868ee8eab3e" | sha256sum
+
+2c78bcd3187437a7a5d9d8dbf555b3574ba7d143c1852860f9df0a46d5df056a  -
+```
+chain_id = sha256:2c78bcd3187437a7a5d9d8dbf555b3574ba7d143c1852860f9df0a46d5df056a
+3. 第三层 diff_id = sha256:48b4a40de3597ec0a28c2d4508dec64ae685ed0da77b128d0fb5c69cada91882
+```diff
+$echo -n "sha256:2c78bcd3187437a7a5d9d8dbf555b3574ba7d143c1852860f9df0a46d5df056a sha256:48b4a40de3597ec0a28c2d4508dec64ae685ed0da77b128d0fb5c69cada91882" | sha256sum
+
+bdf28aff423adfe7c6cb938eced2f19a32efa9fa3922a3c5ddce584b139dc864  -
+```
+chain_id = sha256:bdf28aff423adfe7c6cb938eced2f19a32efa9fa3922a3c5ddce584b139dc864
+
 ## overlayfs实战
 ```
 终端1：
