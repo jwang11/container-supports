@@ -1,6 +1,6 @@
 # 实战
 
-### OCI image格式
+## OCI image格式
 - Docker config文件
 ```
 $cd /var/lib/docker/image/overlay2/
@@ -177,7 +177,7 @@ $ cat imagedb/content/sha256/69593048aa3acfee0f75f20b77acb549de2472063053f6730c4
   }
 }
 ```
-### overlayfs实战
+## overlayfs实战
 ```
 终端1：
 $ docker info
