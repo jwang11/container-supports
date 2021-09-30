@@ -80,6 +80,103 @@ $ cat imagedb/content/sha256/69593048aa3acfee0f75f20b77acb549de2472063053f6730c4
 }
 ```
 
+- 在看一个多层的config
+```
+{
+  "architecture": "amd64",
+  "config": {
+    "Hostname": "",
+    "Domainname": "",
+    "User": "",
+    "AttachStdin": false,
+    "AttachStdout": false,
+    "AttachStderr": false,
+    "ExposedPorts": {
+      "80/tcp": {}
+    },
+    "Tty": false,
+    "OpenStdin": false,
+    "StdinOnce": false,
+    "Env": [
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "NGINX_VERSION=1.21.1",
+      "NJS_VERSION=0.6.1",
+      "PKG_RELEASE=1~buster"
+    ],
+    "Cmd": [
+      "nginx",
+      "-g",
+      "daemon off;"
+    ],
+    "Image": "sha256:ade63a6b00b9f5be8d14b801fe6df6f72a34aa695ba01db7380d345ed19cad70",
+    "Volumes": null,
+    "WorkingDir": "",
+    "Entrypoint": [
+      "/docker-entrypoint.sh"
+    ],
+    "OnBuild": null,
+    "Labels": {
+      "maintainer": "NGINX Docker Maintainers <docker-maint@nginx.com>"
+    },
+    "StopSignal": "SIGQUIT"
+  },
+  "container": "c0f61378a01130e56a6072f9409a77921c5089cb2552be7ceab5e44678d46c2b",
+  "container_config": {
+    "Hostname": "c0f61378a011",
+    "Domainname": "",
+    "User": "",
+    "AttachStdin": false,
+    "AttachStdout": false,
+    "AttachStderr": false,
+    "ExposedPorts": {
+      "80/tcp": {}
+    },
+    "Tty": false,
+    "OpenStdin": false,
+    "StdinOnce": false,
+    "Env": [
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "NGINX_VERSION=1.21.1",
+      "NJS_VERSION=0.6.1",
+      "PKG_RELEASE=1~buster"
+    ],
+    "Cmd": [
+      "/bin/sh",
+      "-c",
+      "#(nop) ",
+      "CMD [\"nginx\" \"-g\" \"daemon off;\"]"
+    ],
+    "Image": "sha256:ade63a6b00b9f5be8d14b801fe6df6f72a34aa695ba01db7380d345ed19cad70",
+    "Volumes": null,
+    "WorkingDir": "",
+    "Entrypoint": [
+      "/docker-entrypoint.sh"
+    ],
+    "OnBuild": null,
+    "Labels": {
+      "maintainer": "NGINX Docker Maintainers <docker-maint@nginx.com>"
+    },
+    "StopSignal": "SIGQUIT"
+  },
+  "created": "2021-07-06T19:39:40.385800548Z",
+  "docker_version": "20.10.7",
+  "history": [
+...
+  ],
+  "os": "linux",
+  "rootfs": {
+    "type": "layers",
+    "diff_ids": [
+      "sha256:764055ebc9a7a290b64d17cf9ea550f1099c202d83795aa967428ebdf335c9f7",
+      "sha256:ace9ed9bcfafbc909bc3e9451490652f685959db02a4e01e0528a868ee8eab3e",
+      "sha256:48b4a40de3597ec0a28c2d4508dec64ae685ed0da77b128d0fb5c69cada91882",
+      "sha256:c553c6ba5f1354e1980871b413e057950e0c02d2d7a66b39de2e03836048fda9",
+      "sha256:d97733c0a3b64c08bc0dd286926a8eff1b162b4d9fad229eab807c6dc516c172",
+      "sha256:9d1af766c81806211d5453b711169103e4f5c3c2609e1dfb9ea4dee7e96a7968"
+    ]
+  }
+}
+```
 ### overlayfs实战
 ```
 终端1：
