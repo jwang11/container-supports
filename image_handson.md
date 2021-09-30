@@ -219,7 +219,7 @@ f22b99068db93900abe17f7f5e09ec775c2826ecfe9db961fea68293744144bd/
 - 第二层 diff_id = sha256:ace9ed9bcfafbc909bc3e9451490652f685959db02a4e01e0528a868ee8eab3e
 ```diff
 $echo -n "sha256:764055ebc9a7a290b64d17cf9ea550f1099c202d83795aa967428ebdf335c9f7 sha256:ace9ed9bcfafbc909bc3e9451490652f685959db02a4e01e0528a868ee8eab3e" | sha256sum
-
+- chain_id是
 2c78bcd3187437a7a5d9d8dbf555b3574ba7d143c1852860f9df0a46d5df056a  -
 ```
 chain_id = sha256:2c78bcd3187437a7a5d9d8dbf555b3574ba7d143c1852860f9df0a46d5df056a
@@ -227,16 +227,49 @@ chain_id = sha256:2c78bcd3187437a7a5d9d8dbf555b3574ba7d143c1852860f9df0a46d5df05
 - 第三层 diff_id = sha256:48b4a40de3597ec0a28c2d4508dec64ae685ed0da77b128d0fb5c69cada91882
 ```diff
 $echo -n "sha256:2c78bcd3187437a7a5d9d8dbf555b3574ba7d143c1852860f9df0a46d5df056a sha256:48b4a40de3597ec0a28c2d4508dec64ae685ed0da77b128d0fb5c69cada91882" | sha256sum
-
+- chain_id是
 bdf28aff423adfe7c6cb938eced2f19a32efa9fa3922a3c5ddce584b139dc864  -
 ```
-chain_id = sha256:bdf28aff423adfe7c6cb938eced2f19a32efa9fa3922a3c5ddce584b139dc864 <br>
 
 - 第四层 diff_id = sha256:c553c6ba5f1354e1980871b413e057950e0c02d2d7a66b39de2e03836048fda9
+```diff
+$echo -n "sha256:bdf28aff423adfe7c6cb938eced2f19a32efa9fa3922a3c5ddce584b139dc864 sha256:c553c6ba5f1354e1980871b413e057950e0c02d2d7a66b39de2e03836048fda9" | sha256sum
+- chain_id 是
+435c6dad68b58885ad437e5f35f53e071213134eb9e4932b445eac7b39170700  -
+```
 - 第五层 diff_id = sha256:d97733c0a3b64c08bc0dd286926a8eff1b162b4d9fad229eab807c6dc516c172
+```diff
+$echo -n "sha256:435c6dad68b58885ad437e5f35f53e071213134eb9e4932b445eac7b39170700 sha256:d97733c0a3b64c08bc0dd286926a8eff1b162b4d9fad229eab807c6dc516c172" | sha256sum
+- chain_id 是
+b27eb5bbca70862681631b492735bac31d3c1c558c774aca9c0e36f1b50ba915  -
+```
 - 第六层 diff_id = sha256:9d1af766c81806211d5453b711169103e4f5c3c2609e1dfb9ea4dee7e96a7968
+```diff
+$echo -n "sha256:b27eb5bbca70862681631b492735bac31d3c1c558c774aca9c0e36f1b50ba915 sha256:9d1af766c81806211d5453b711169103e4f5c3c2609e1dfb9ea4dee7e96a7968" | sha256sum
+- chain_id 是
+63d268dd303e176ba45c810247966ff8d1cb9a5bce4a404584087ec01c63de15  -
+```
 
+### 通过chain_id找到cache_id。Docker为了安全，没有直接使用chain_id作为层存储目录，而是动态生成一个cache_id，放在chain_id目录下
+```diff
+$ ls layerdb/sha256/63d268dd303e176ba45c810247966ff8d1cb9a5bce4a404584087ec01c63de15
+cache-id  diff  parent  size  tar-split.json.gz
 
+$ cat layerdb/sha256/63d268dd303e176ba45c810247966ff8d1cb9a5bce4a404584087ec01c63de15/cache_id
+- 得到cache_id
+7c5b0caa88da4897b0d4595a756e09c1c7bcef57531881b02423e9565d1f2ad2
+
++ 检查/var/lib/docker/overlay2/{$cache_id}
+$ ls /var/lib/docker/oerlay2/7c5b0caa88da4897b0d4595a756e09c1c7bcef57531881b02423e9565d1f2ad2
+diff  link  lower  work
+
+$ cd /var/lib/docker/oerlay2/7c5b0caa88da4897b0d4595a756e09c1c7bcef57531881b02423e9565d1f2ad2
+$ tree diff
+diff
+└── docker-entrypoint.d
+    └── 30-tune-worker-processes.sh
+
+```
 ## overlayfs实战
 ```
 终端1：
