@@ -213,24 +213,27 @@ f22b99068db93900abe17f7f5e09ec775c2826ecfe9db961fea68293744144bd/
 - 以nginx为例，看看diff_id和chain_id推算
 >> ChainID(layerN) = SHA256hex(ChainID(layerN-1) + " " + DiffID(layerN))
 
-  1. 第一层 diff_id = chain_id = sha256:764055ebc9a7a290b64d17cf9ea550f1099c202d83795aa967428ebdf335c9f7
-  2. 第二层 diff_id = sha256:ace9ed9bcfafbc909bc3e9451490652f685959db02a4e01e0528a868ee8eab3e
+  1. 第一层 diff_id = chain_id = sha256:764055ebc9a7a290b64d17cf9ea550f1099c202d83795aa967428ebdf335c9f7 <br>
+
+  2. 第二层 diff_id = sha256:ace9ed9bcfafbc909bc3e9451490652f685959db02a4e01e0528a868ee8eab3e <br>
 ```diff
 $echo -n "sha256:764055ebc9a7a290b64d17cf9ea550f1099c202d83795aa967428ebdf335c9f7 sha256:ace9ed9bcfafbc909bc3e9451490652f685959db02a4e01e0528a868ee8eab3e" | sha256sum
 
 2c78bcd3187437a7a5d9d8dbf555b3574ba7d143c1852860f9df0a46d5df056a  -
 ```
 chain_id = sha256:2c78bcd3187437a7a5d9d8dbf555b3574ba7d143c1852860f9df0a46d5df056a <br>
-  3. 第三层 diff_id = sha256:48b4a40de3597ec0a28c2d4508dec64ae685ed0da77b128d0fb5c69cada91882
+
+    3. 第三层 diff_id = sha256:48b4a40de3597ec0a28c2d4508dec64ae685ed0da77b128d0fb5c69cada91882
 ```diff
 $echo -n "sha256:2c78bcd3187437a7a5d9d8dbf555b3574ba7d143c1852860f9df0a46d5df056a sha256:48b4a40de3597ec0a28c2d4508dec64ae685ed0da77b128d0fb5c69cada91882" | sha256sum
 
 bdf28aff423adfe7c6cb938eced2f19a32efa9fa3922a3c5ddce584b139dc864  -
 ```
 chain_id = sha256:bdf28aff423adfe7c6cb938eced2f19a32efa9fa3922a3c5ddce584b139dc864 <br>
-  4. 第四层 diff_id = sha256:c553c6ba5f1354e1980871b413e057950e0c02d2d7a66b39de2e03836048fda9
-  5. 第五层 diff_id = sha256:d97733c0a3b64c08bc0dd286926a8eff1b162b4d9fad229eab807c6dc516c172
-  6. 第六层 diff_id = sha256:9d1af766c81806211d5453b711169103e4f5c3c2609e1dfb9ea4dee7e96a7968
+
+    4. 第四层 diff_id = sha256:c553c6ba5f1354e1980871b413e057950e0c02d2d7a66b39de2e03836048fda9 <br>
+    5. 第五层 diff_id = sha256:d97733c0a3b64c08bc0dd286926a8eff1b162b4d9fad229eab807c6dc516c172 <br>
+    6. 第六层 diff_id = sha256:9d1af766c81806211d5453b711169103e4f5c3c2609e1dfb9ea4dee7e96a7968 <br>
 
 
 ## overlayfs实战
