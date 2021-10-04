@@ -106,6 +106,15 @@ root           8       1  0 18:28 pts/2    00:00:00 ps -ef
    * MS_UNBINDABLE: 这个和MS_PRIVATE相同，只是这种类型的挂载点不能作为bind mount的源，主要用来防止递归嵌套情况的出现。
 
 ```diff
+# 准备四个虚拟disk，并创建ext2文件系统，用于mount测试
+$ mkdir disks
+$ cd disks/
+$ dd if=/dev/zero bs=1M count=32 of=./disk1.img
+32+0 records in
+32+0 records out
+$ mkfs.ext2 ./disk1.img
+
++ 重复上面步骤生成并格式化disk2.img, disk3.img, disk4.img
 ```
 
 ### Net Namespace
