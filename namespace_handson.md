@@ -114,9 +114,63 @@ $ dd if=/dev/zero bs=1M count=32 of=./disk1.img
 32+0 records out
 $ mkfs.ext2 ./disk1.img
 
-+ 重复上面步骤生成并格式化disk2.img, disk3.img, disk4.img
++ # 重复上面步骤生成并格式化disk2.img, disk3.img, disk4.img
+
+$ mkdir disk1 disk2
+$ ls
+disk1  disk1.img  disk2  disk2.img  disk3.img  disk4.img
+
+# 显示的以shared 方式挂载disk1, private方式挂载disk2
+$ mount --make-shared ./disk1.img ./disk1
+$ mount --make-private ./disk2.img ./disk2
+
+$ cat /proc/self/mountinfo |grep disks
+500 29 7:11 / /home/jwang/disks/disk1 rw,relatime shared:435 - ext2 /dev/loop11 rw
+1002 29 7:12 / /home/jwang/disks/disk2 rw,relatime - ext2 /dev/loop12 rw
+
+$ mkdir ./disk1/disk3 ./disk2/disk4
+$ cat /proc/self/mountinfo |grep disk
+500 29 7:11 / /home/jwang/disks/disk1 rw,relatime shared:435 - ext2 /dev/loop11 rw
+1002 29 7:12 / /home/jwang/disks/disk2 rw,relatime - ext2 /dev/loop12 rw
+1148 500 7:13 / /home/jwang/disks/disk1/disk3 rw,relatime shared:639 - ext2 /dev/loop13 rw
+1215 1002 7:14 / /home/jwang/disks/disk2/disk4 rw,relatime - ext2 /dev/loop14 rw
+
++ # mountinfo信息显示，第一，二列是挂载点ID和父挂载点ID，500和1148的类型都是shared，而1002和1215的类型都是private的，
++ # 在默认mount的情况下，子挂载点会继承父挂载点的propagation type,但是 peer group不同
 ```
 
+* bind-mount测试
+```diff
++ # umount disk3,disk4，创建bind1,bind2用于bind测试
+$ umount disk1/disk3/
+$ umount disk2/disk4/
+$ mkdir bind1 bind2
+
+$ cat /proc/self/mountinfo |grep disk
+500 29 7:11 / /home/jwang/disks/disk1 rw,relatime shared:435 - ext2 /dev/loop11 rw
+1002 29 7:12 / /home/jwang/disks/disk2 rw,relatime - ext2 /dev/loop12 rw
+1216 29 7:11 / /home/jwang/disks/bind1 rw,relatime shared:435 - ext2 /dev/loop11 rw
+1240 29 7:12 / /home/jwang/disks/bind2 rw,relatime shared:676 - ext2 /dev/loop12 rw
+
++ # 因为500和1216都是shared类型且是通过bind方式mount在一起的，所以他们属于同一个peer group 435。
+
++ # 重新挂载disk3和disk4
+$ sudo mount ./disk3.img ./disk1/disk3
+$ sudo mount ./disk4.img ./disk2/disk4
+
+$ cat /proc/self/mountinfo |grep "disks"
+500 29 7:11 / /home/jwang/disks/disk1 rw,relatime shared:435 - ext2 /dev/loop11 rw
+1002 29 7:12 / /home/jwang/disks/disk2 rw,relatime - ext2 /dev/loop12 rw
+1216 29 7:11 / /home/jwang/disks/bind1 rw,relatime shared:435 - ext2 /dev/loop11 rw
+1240 29 7:12 / /home/jwang/disks/bind2 rw,relatime shared:676 - ext2 /dev/loop12 rw
+1148 500 7:13 / /home/jwang/disks/disk1/disk3 rw,relatime shared:639 - ext2 /dev/loop13 rw
+1192 1216 7:13 / /home/jwang/disks/bind1/disk3 rw,relatime shared:639 - ext2 /dev/loop13 rw
+1384 1002 7:14 / /home/jwang/disks/disk2/disk4 rw,relatime - ext2 /dev/loop14 rw
+
++ #由于disk1/和bind1/属于同一个peer group，
++ #所以在挂载了disk3后，在两个目录下都能看到disk3下的内容
++ #而新生成的挂载点  disk1/disk3 和 bind1/disk3 继承了父挂载点disk1和bind1的 传播类型，由于父挂载点时一个peer group， 则disk1/disk3  和 bind1/disk3 也是一个peer group
+```
 ### Net Namespace
 ```diff
 $ sudo unshare --fork --net bash
