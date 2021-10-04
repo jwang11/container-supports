@@ -105,6 +105,9 @@ root           8       1  0 18:28 pts/2    00:00:00 ps -ef
    * MS_SLAVE: 跟名字一样，信息的传播是单向的，在同一个peer group里面，master的挂载点下面发生变化的时候，slave的挂载点下面也跟着变化，但反之则不然，slave下发生变化的时候不会通知master，master不会发生变化。
    * MS_UNBINDABLE: 这个和MS_PRIVATE相同，只是这种类型的挂载点不能作为bind mount的源，主要用来防止递归嵌套情况的出现。
 
+```diff
+```
+
 ### Net Namespace
 ```diff
 $ sudo unshare --fork --net bash
