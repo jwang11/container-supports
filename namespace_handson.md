@@ -180,11 +180,11 @@ $ cat /proc/self/mountinfo |grep "disks"
 ```diff
 $ sudo unshare --fork --net bash
 $ ifconfig
-
 ```
-* ***理解CNI网络接口**
+***理解CNI网络接口**
 
-准备工作
+* **`准备工作`**
+* 
 ```diff
 + # 建立一个--net=none的容器 
 $ contid=$(docker run -d --net=none --name mynginx nginx)
@@ -199,9 +199,10 @@ $ nsenter -t $pid -n ip a
        valid_lft forever preferred_lft forever
 ```
 
+* **`单功能CNI Config`**
 
- ```json
-+ # 建立一个config.json，配置CNI网络
+建立一个config.json，配置CNI网络
+```json
  {
     "cniVersion": "0.4.0",
     "name": "mynet",
@@ -255,39 +256,6 @@ $ CNI_COMMAND=ADD CNI_CONTAINERID=$contid CNI_NETNS=$netnspath CNI_IFNAME=eth0 C
     "dns": {}
 }
 
-再来看一个链式的例子
- ```json
-+ # 建立一个portmap.conflist配置文件，包含两个插件，bridge和portmap
-{
-  "cniVersion": "0.4.0",
-  "name": "portmap",
-  "plugins": [
-    {
-      "type": "bridge",
-      "bridge": "mynet0",
-      "isDefaultGateway": true, 
-      "forceAddress": false, 
-      "ipMasq": true, 
-      "hairpinMode": true,
-      "ipam": {
-        "type": "host-local",
-        "subnet": "10.10.0.0/16",
-        "gateway": "10.10.0.1"
-      }
-    },
-    {
-      "type": "portmap",
-      "runtimeConfig": {
-        "portMappings": [
-          {"hostPort": 8080, "containerPort": 80, "protocol": "tcp"}
-        ]
-      }
-    }
-  ]
-}
-```
-
-执行CNI命令
 
 
 + # 检查网络，可以看到eth0
@@ -332,6 +300,75 @@ $ docker stop mynginx
 $ docker rm nginx
 ```
  
+ 再来看一个链式的例子
+ ```json
++ # 建立一个portmap.conflist配置文件，包含两个插件，bridge和portmap
+{
+  "cniVersion": "0.4.0",
+  "name": "portmap",
+  "plugins": [
+    {
+      "type": "bridge",
+      "bridge": "mynet0",
+      "isDefaultGateway": true, 
+      "forceAddress": false, 
+      "ipMasq": true, 
+      "hairpinMode": true,
+      "ipam": {
+        "type": "host-local",
+        "subnet": "10.10.0.0/16",
+        "gateway": "10.10.0.1"
+      }
+    },
+    {
+      "type": "portmap",
+      "runtimeConfig": {
+        "portMappings": [
+          {"hostPort": 8080, "containerPort": 80, "protocol": "tcp"}
+        ]
+      }
+    }
+  ]
+}
+```
+
+执行CNI命令
+```diff
+# CNI_PATH=~/cni/bin NETCONFPATH=.  cnitool add portmap $netnspath
+{
+    "cniVersion": "0.4.0",
+    "interfaces": [
+        {
+            "name": "mynet0",
+            "mac": "92:ad:e8:25:6e:a3"
+        },
+        {
+            "name": "vethccea921c",
+            "mac": "82:87:12:10:8b:76"
+        },
+        {
+            "name": "eth0",
+            "mac": "e6:4f:25:58:6a:ad",
+            "sandbox": "/proc/55704/ns/net"
+        }
+    ],
+    "ips": [
+        {
+            "version": "4",
+            "interface": 2,
+            "address": "10.10.0.2/16",
+            "gateway": "10.10.0.1"
+        }
+    ],
+    "routes": [
+        {
+            "dst": "0.0.0.0/0",
+            "gw": "10.10.0.1"
+        }
+    ],
+    "dns": {}
+}
+```
 ## User Namespace
 
 - 终端1：
