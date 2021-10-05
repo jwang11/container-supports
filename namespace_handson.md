@@ -133,6 +133,9 @@ $ cat /proc/self/mountinfo |grep disks
 1002 29 7:12 / /home/jwang/disks/disk2 rw,relatime - ext2 /dev/loop12 rw
 
 $ mkdir ./disk1/disk3 ./disk2/disk4
+$ sudo mount ./disk3.img ./disk1/disk3
+$ sudo mount ./disk4.img ./disk2/disk4
+
 $ cat /proc/self/mountinfo |grep disk
 500 29 7:11 / /home/jwang/disks/disk1 rw,relatime shared:435 - ext2 /dev/loop11 rw
 1002 29 7:12 / /home/jwang/disks/disk2 rw,relatime - ext2 /dev/loop12 rw
@@ -141,13 +144,13 @@ $ cat /proc/self/mountinfo |grep disk
 
 + # mountinfo信息显示，第一，二列是挂载点ID和父挂载点ID，500和1148的类型都是shared，而1002和1215的类型都是private的，
 + # 在默认mount的情况下，子挂载点会继承父挂载点的propagation type,但是 peer group不同
+
+$ umount disk1/disk3/
+$ umount disk2/disk4/
 ```
 
 #### bind-mount测试
 ```diff
-+ # umount disk3,disk4，创建bind1,bind2用于bind测试
-$ umount disk1/disk3/
-$ umount disk2/disk4/
 $ mkdir bind1 bind2
 
 $ cat /proc/self/mountinfo |grep disk
@@ -174,6 +177,39 @@ $ cat /proc/self/mountinfo |grep "disks"
 + #由于disk1/和bind1/属于同一个peer group，
 + #所以在挂载了disk3后，在两个目录下都能看到disk3下的内容
 + #而新生成的挂载点  disk1/disk3 和 bind1/disk3 继承了父挂载点disk1和bind1的 传播类型，由于父挂载点时一个peer group， 则disk1/disk3  和 bind1/disk3 也是一个peer group
+
+$ cat /proc/self/mountinfo |grep disks
+1241 1192 7:11 / /home/jwang/disks/disk1 rw,relatime shared:435 - ext2 /dev/loop11 rw
+1242 1192 7:12 / /home/jwang/disks/disk2 rw,relatime - ext2 /dev/loop12 rw
+1342 1241 7:13 / /home/jwang/disks/disk1/disk3 rw,relatime shared:639 - ext2 /dev/loop13 r
+```
+
+#### New mount namespace测试
+终端1：
+```
++ # 进程进入新的mount namespace，检查mountinfo
+$ cat /proc/self/mountinfo |grep disks
+1241 1192 7:11 / /home/jwang/disks/disk1 rw,relatime shared:435 - ext2 /dev/loop11 rw
+1242 1192 7:12 / /home/jwang/disks/disk2 rw,relatime - ext2 /dev/loop12 rw
+
++ #看上去内容差不多，但挂载点ID，父挂载点ID都变了，说明是Copy过来的，不是原来namespace的
++ #disk1挂载点的peer group 435，和原namespace里的disk1挂载点是一样的
+```
+
+终端2：
+```
++ #原挂载点的mountinfo
+$ sudo cat /proc/self/mountinfo |grep disks
+500 29 7:11 / /home/jwang/disks/disk1 rw,relatime shared:435 - ext2 /dev/loop11 rw
+1002 29 7:12 / /home/jwang/disks/disk2 rw,relatime - ext2 /dev/loop12 rw
+
+$ sudo mount ./disk3.img ./disk1/disk3
+
+$ sudo cat /proc/self/mountinfo |grep disks
+500 29 7:11 / /home/jwang/disks/disk1 rw,relatime shared:435 - ext2 /dev/loop11 rw
+1002 29 7:12 / /home/jwang/disks/disk2 rw,relatime - ext2 /dev/loop12 rw
+1341 500 7:13 / /home/jwang/disks/disk1/disk3 rw,relatime shared:639 - ext2 /dev/loop13 rw
+
 ```
 
 ## Net Namespace
