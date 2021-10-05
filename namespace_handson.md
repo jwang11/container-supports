@@ -1,7 +1,8 @@
-## 实战
+# 实战
 
 
-### 进程和Namespace
+## 进程和Namespace
+
 ```
 root@jwang-desktop:~# sudo ls -l /proc/$$/ns
 total 0
@@ -17,7 +18,8 @@ lrwxrwxrwx 1 root root 0 9月  28 15:55 user -> 'user:[4026531837]'
 lrwxrwxrwx 1 root root 0 9月  28 15:55 uts -> 'uts:[4026531838]'
 ```
 
-### PID Namespace
+## PID Namespace
+
 - 终端1：
 ```diff
 $ sudo unshare --fork --pid bash
@@ -171,7 +173,9 @@ $ cat /proc/self/mountinfo |grep "disks"
 + #所以在挂载了disk3后，在两个目录下都能看到disk3下的内容
 + #而新生成的挂载点  disk1/disk3 和 bind1/disk3 继承了父挂载点disk1和bind1的 传播类型，由于父挂载点时一个peer group， 则disk1/disk3  和 bind1/disk3 也是一个peer group
 ```
-### Net Namespace
+
+## Net Namespace
+
 ```diff
 $ sudo unshare --fork --net bash
 $ ifconfig
@@ -283,12 +287,12 @@ Accept-Ranges: bytes
 
 - # 清理,注意命令是DEL
 $ CNI_COMMAND=DEL CNI_CONTAINERID=$contid CNI_NETNS=$netnspath CNI_IFNAME=eth0 CNI_PATH=~/cni/bin ~/cni/bin/bridge < bridge.json
+$ ip link del mynet0
 $ docker stop nginx
 $ docker rm nginx
-
 ```
  
-### User Namespace
+## User Namespace
 
 - 终端1：
 ```diff
