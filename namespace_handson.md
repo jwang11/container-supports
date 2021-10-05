@@ -24,7 +24,7 @@ lrwxrwxrwx 1 root root 0 9月  28 15:55 uts -> 'uts:[4026531838]'
 ```diff
 $ sudo unshare --fork --pid bash
 
-- // $$表示当前进程
++ // $$表示当前进程
 $ echo $$
 1
 ```
@@ -92,7 +92,7 @@ systemd(1)─┬─ModemManager(722)─┬─{ModemManager}(745)
 
 这时候，新的PID namespace里仍然可以看到原来namespace进程，如何完全隔离呢？/proc重新加载一下就好了，ps里的进程是从/proc里读出来的
 ```diff
-- // --mount-proc含义是在新进程起来之前，把/proc在新的mount namespace重新挂载一下（隐含建立一个新mount namespace），否则是parent的copy
++ // --mount-proc含义是在新进程起来之前，把/proc在新的mount namespace重新挂载一下（隐含建立一个新mount namespace），否则是parent的copy
 $ sudo unshare --pid --fork --mount-proc bash
 $ ps -ef
 UID          PID    PPID  C STIME TTY          TIME CMD
@@ -109,7 +109,7 @@ root           8       1  0 18:28 pts/2    00:00:00 ps -ef
    * MS_UNBINDABLE: 这个和MS_PRIVATE相同，只是这种类型的挂载点不能作为bind mount的源，主要用来防止递归嵌套情况的出现。
 
 ```diff
-# 准备四个虚拟disk，并创建ext2文件系统，用于mount测试
++ # 准备四个虚拟disk，并创建ext2文件系统，用于mount测试
 $ mkdir disks
 $ cd disks/
 $ dd if=/dev/zero bs=1M count=32 of=./disk1.img
@@ -182,22 +182,26 @@ $ sudo unshare --fork --net bash
 $ ifconfig
 
 ```
-* ***理解CNI***
-```
-- # 建立一个--net=none的容器 
-$ contid=$(docker run -d --net=none --name nginx nginx)
+* ***理解CNI网络接口**
+
+准备工作
+```json
++ # 建立一个--net=none的容器 
+$ contid=$(docker run -d --net=none --name mynginx nginx)
 $ pid=$(docker inspect -f '{{ .State.Pid }}' $contid)
 $ netnspath=/proc/$pid/ns/net
 
-- # 检查一下该进程namespace下网络
++ # 检查一下该进程namespace下网络
 $ nsenter -t $pid -n ip a
 1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
     inet 127.0.0.1/8 scope host lo
        valid_lft forever preferred_lft forever
 ```
- 建立一个config.json，配置CNI网络
+
+
  ```json
++ # 建立一个config.json，配置CNI网络
  {
     "cniVersion": "0.4.0",
     "name": "mynet",
@@ -214,7 +218,7 @@ $ nsenter -t $pid -n ip a
 }
 ```
 
-继续运行CNI命令
+运行CNI命令
 ```diff
 $ CNI_COMMAND=ADD CNI_CONTAINERID=$contid CNI_NETNS=$netnspath CNI_IFNAME=eth0 CNI_PATH=~/cni/bin ~/cni/bin/bridge < bridge.json
 {
@@ -251,7 +255,42 @@ $ CNI_COMMAND=ADD CNI_CONTAINERID=$contid CNI_NETNS=$netnspath CNI_IFNAME=eth0 C
     "dns": {}
 }
 
-- # 检查网络，可以看到eth0
+再来看一个链式的例子
+ ```json
++ # 建立一个portmap.conflist配置文件，包含两个插件，bridge和portmap
+{
+  "cniVersion": "0.4.0",
+  "name": "portmap",
+  "plugins": [
+    {
+      "type": "bridge",
+      "bridge": "mynet0",
+      "isDefaultGateway": true, 
+      "forceAddress": false, 
+      "ipMasq": true, 
+      "hairpinMode": true,
+      "ipam": {
+        "type": "host-local",
+        "subnet": "10.10.0.0/16",
+        "gateway": "10.10.0.1"
+      }
+    },
+    {
+      "type": "portmap",
+      "runtimeConfig": {
+        "portMappings": [
+          {"hostPort": 8080, "containerPort": 80, "protocol": "tcp"}
+        ]
+      }
+    }
+  ]
+}
+```
+
+执行CNI命令
+
+
++ # 检查网络，可以看到eth0
 $ nsenter -t $pid -n ip a
 1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
@@ -262,7 +301,7 @@ $ nsenter -t $pid -n ip a
     inet 10.10.0.2/16 brd 10.10.255.255 scope global eth0
        valid_lft forever preferred_lft forever
 
-- # 添加路由
++ # 添加路由
 $ ip route add 10.10.0.0/16 dev mynet0 src 10.10.0.1
 $ route
 Kernel IP routing table
@@ -274,7 +313,7 @@ link-local      0.0.0.0         255.255.0.0     U     1000   0        0 virbr0
 192.168.1.0     0.0.0.0         255.255.255.0   U     100    0        0 eno1
 192.168.122.0   0.0.0.0         255.255.255.0   U     0      0        0 virbr0
 
-- # 访问nginx       
++ # 访问nginx       
 $ curl -I 10.10.0.2
 HTTP/1.1 200 OK
 Server: nginx/1.21.1
@@ -286,10 +325,10 @@ Connection: keep-alive
 ETag: "60e46fc5-264"
 Accept-Ranges: bytes
 
-- # 清理,注意命令是DEL
++ # 清理,注意命令是DEL
 $ CNI_COMMAND=DEL CNI_CONTAINERID=$contid CNI_NETNS=$netnspath CNI_IFNAME=eth0 CNI_PATH=~/cni/bin ~/cni/bin/bridge < bridge.json
 $ ip link del mynet0
-$ docker stop nginx
+$ docker stop mynginx
 $ docker rm nginx
 ```
  
