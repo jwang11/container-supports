@@ -181,10 +181,9 @@ $ cat /proc/self/mountinfo |grep "disks"
 $ sudo unshare --fork --net bash
 $ ifconfig
 ```
-***理解CNI网络接口**
+***理解CNI网络接口***
 
-* **`准备工作`**
-* 
+* **`准备工作`** 
 ```diff
 + # 建立一个--net=none的容器 
 $ contid=$(docker run -d --net=none --name mynginx nginx)
@@ -256,8 +255,6 @@ $ CNI_COMMAND=ADD CNI_CONTAINERID=$contid CNI_NETNS=$netnspath CNI_IFNAME=eth0 C
     "dns": {}
 }
 
-
-
 + # 检查网络，可以看到eth0
 $ nsenter -t $pid -n ip a
 1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
@@ -300,8 +297,8 @@ $ docker stop mynginx
 $ docker rm nginx
 ```
  
- 再来看一个链式的例子
- ```json
+* **`链式多功能Config`**
+```json
 + # 建立一个portmap.conflist配置文件，包含两个插件，bridge和portmap
 {
   "cniVersion": "0.4.0",
@@ -369,6 +366,8 @@ $ docker rm nginx
     "dns": {}
 }
 ```
+
+
 ## User Namespace
 
 - 终端1：
