@@ -99,7 +99,8 @@ UID          PID    PPID  C STIME TTY          TIME CMD
 root           1       0  0 18:28 pts/2    00:00:00 bash
 root           8       1  0 18:28 pts/2    00:00:00 ps -ef
 ```
-### Mount Namespace
+## Mount Namespace
+
 * 每个挂载点都有一个propagation type标志, 由它来决定当一个挂载点的下面创建和移除挂载点的时候，是否会传播到属于相同peer group的其他挂载点下去，也即同一个peer group里的其他的挂载点下面是不是也会创建和移除相应的挂载点.现在有4种不同类型的propagation type：
 
    * MS_SHARED: 从名字就可以看出，挂载信息会在同一个peer group的不同挂载点之间共享传播. 当一个挂载点下面添加或者删除挂载点的时候，同一个peer group里的其他挂载点下面也会挂载和卸载同样的挂载点
