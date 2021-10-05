@@ -185,7 +185,7 @@ $ ifconfig
 * ***理解CNI网络接口**
 
 准备工作
-```json
+```diff
 + # 建立一个--net=none的容器 
 $ contid=$(docker run -d --net=none --name mynginx nginx)
 $ pid=$(docker inspect -f '{{ .State.Pid }}' $contid)
