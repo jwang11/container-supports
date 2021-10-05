@@ -331,7 +331,7 @@ $ docker rm nginx
 
 执行CNI命令
 ```diff
-# CNI_PATH=~/cni/bin NETCONFPATH=.  cnitool add portmap $netnspath
+$ CNI_PATH=~/cni/bin NETCONFPATH=.  cnitool add portmap $netnspath
 {
     "cniVersion": "0.4.0",
     "interfaces": [
@@ -365,6 +365,19 @@ $ docker rm nginx
     ],
     "dns": {}
 }
+
++ // 检查portmap是否成功
+$ curl -I http://localhost:8080
+HTTP/1.1 200 OK
+Server: nginx/1.21.1
+Date: Tue, 05 Oct 2021 07:21:30 GMT
+Content-Type: text/html
+Content-Length: 612
+Last-Modified: Tue, 06 Jul 2021 14:59:17 GMT
+Connection: keep-alive
+ETag: "60e46fc5-264"
+Accept-Ranges: bytes
+
 ```
 
 
