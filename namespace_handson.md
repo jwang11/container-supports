@@ -90,7 +90,7 @@ systemd(1)─┬─ModemManager(722)─┬─{ModemManager}(745)
 
 这时候，新的PID namespace里仍然可以看到原来namespace进程，如何完全隔离呢？/proc重新加载一下就好了，ps里的进程是从/proc里读出来的
 ```diff
-- // --mount-proc含义是在新进程起来之前，把/proc在新的namespace下挂载一下，否则是parent的copy
+- // --mount-proc含义是在新进程起来之前，把/proc在新的mount namespace重新挂载一下（隐含建立一个新mount namespace），否则是parent的copy
 $ sudo unshare --pid --fork --mount-proc bash
 $ ps -ef
 UID          PID    PPID  C STIME TTY          TIME CMD
