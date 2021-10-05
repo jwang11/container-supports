@@ -187,18 +187,28 @@ $ cat /proc/self/mountinfo |grep disks
 #### New mount namespace测试
 终端1：
 ```diff
+
 + # 进程进入新的mount namespace，检查mountinfo
 $ cat /proc/self/mountinfo |grep disks
 1241 1192 7:11 / /home/jwang/disks/disk1 rw,relatime shared:435 - ext2 /dev/loop11 rw
 1242 1192 7:12 / /home/jwang/disks/disk2 rw,relatime - ext2 /dev/loop12 rw
 
-+ #看上去内容差不多，但挂载点ID，父挂载点ID都变了，说明是Copy过来的，不是原来namespace的
-+ #disk1挂载点的peer group 435，和原namespace里的disk1挂载点是一样的
++ # 内容看上去差不多，但挂载点ID，父挂载点ID都变了，说明是Copy过来的，不是原来namespace的
++ # disk1挂载点的peer group 435，和原namespace里的disk1挂载点是一样的
 
-# cat /proc/self/mountinfo |grep disks
+- # disk3的挂载信息是shared:639
+$ cat /proc/self/mountinfo |grep disks
 1241 1192 7:11 / /home/jwang/disks/disk1 rw,relatime shared:435 - ext2 /dev/loop11 rw
 1242 1192 7:12 / /home/jwang/disks/disk2 rw,relatime - ext2 /dev/loop12 rw
 1342 1241 7:13 / /home/jwang/disks/disk1/disk3 rw,relatime shared:639 - ext2 /dev/loop13 rw
+
++ # 从新namespace 卸载disk3
+$ umount disk1/disk3/
+
+$ cat /proc/self/mountinfo |grep disks
+1241 1192 7:11 / /home/jwang/disks/disk1 rw,relatime shared:435 - ext2 /dev/loop11 rw
+1242 1192 7:12 / /home/jwang/disks/disk2 rw,relatime - ext2 /dev/loop12 rw
+
 ```
 
 终端2：
@@ -208,13 +218,19 @@ $ sudo cat /proc/self/mountinfo |grep disks
 500 29 7:11 / /home/jwang/disks/disk1 rw,relatime shared:435 - ext2 /dev/loop11 rw
 1002 29 7:12 / /home/jwang/disks/disk2 rw,relatime - ext2 /dev/loop12 rw
 
++ # disk1挂载点下mount新的挂载disk3
 $ sudo mount ./disk3.img ./disk1/disk3
 
++ # disk3的挂载信息是shared:639
 $ sudo cat /proc/self/mountinfo |grep disks
 500 29 7:11 / /home/jwang/disks/disk1 rw,relatime shared:435 - ext2 /dev/loop11 rw
 1002 29 7:12 / /home/jwang/disks/disk2 rw,relatime - ext2 /dev/loop12 rw
 1341 500 7:13 / /home/jwang/disks/disk1/disk3 rw,relatime shared:639 - ext2 /dev/loop13 rw
 
++ # 等待终端1卸载disk3后，检查mountinfo发现，disk3在原mount空间也被卸载了。
+$ sudo cat /proc/self/mountinfo |grep disks
+500 29 7:11 / /home/jwang/disks/disk1 rw,relatime shared:435 - ext2 /dev/loop11 rw
+1002 29 7:12 / /home/jwang/disks/disk2 rw,relatime - ext2 /dev/loop12 rw
 ```
 
 ## Net Namespace
