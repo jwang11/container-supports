@@ -186,7 +186,7 @@ $ cat /proc/self/mountinfo |grep disks
 
 #### New mount namespace测试
 终端1：
-```
+```diff
 + # 进程进入新的mount namespace，检查mountinfo
 $ cat /proc/self/mountinfo |grep disks
 1241 1192 7:11 / /home/jwang/disks/disk1 rw,relatime shared:435 - ext2 /dev/loop11 rw
@@ -194,10 +194,15 @@ $ cat /proc/self/mountinfo |grep disks
 
 + #看上去内容差不多，但挂载点ID，父挂载点ID都变了，说明是Copy过来的，不是原来namespace的
 + #disk1挂载点的peer group 435，和原namespace里的disk1挂载点是一样的
+
+# cat /proc/self/mountinfo |grep disks
+1241 1192 7:11 / /home/jwang/disks/disk1 rw,relatime shared:435 - ext2 /dev/loop11 rw
+1242 1192 7:12 / /home/jwang/disks/disk2 rw,relatime - ext2 /dev/loop12 rw
+1342 1241 7:13 / /home/jwang/disks/disk1/disk3 rw,relatime shared:639 - ext2 /dev/loop13 rw
 ```
 
 终端2：
-```
+```diff
 + #原挂载点的mountinfo
 $ sudo cat /proc/self/mountinfo |grep disks
 500 29 7:11 / /home/jwang/disks/disk1 rw,relatime shared:435 - ext2 /dev/loop11 rw
