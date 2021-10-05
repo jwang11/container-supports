@@ -177,7 +177,117 @@ $ sudo unshare --fork --net bash
 $ ifconfig
 
 ```
+* ***理解CNI***
+```
+- # 建立一个--net=none的容器 
+$ contid=$(docker run -d --net=none --name nginx nginx)
+$ pid=$(docker inspect -f '{{ .State.Pid }}' $contid)
+$ netnspath=/proc/$pid/ns/net
 
+- # 检查一下该进程namespace下网络
+$ nsenter -t $pid -n ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+```
+ 建立一个config.json，配置CNI网络
+ ```json
+ {
+    "cniVersion": "0.4.0",
+    "name": "mynet",
+    "type": "bridge",
+    "bridge": "mynet0",
+    "isDefaultGateway": true,
+    "forceAddress": false,
+    "ipMasq": true,
+    "hairpinMode": true,
+    "ipam": {
+        "type": "host-local",
+        "subnet": "10.10.0.0/16"
+    }
+}
+```
+
+继续运行CNI命令
+```diff
+$ CNI_COMMAND=ADD CNI_CONTAINERID=$contid CNI_NETNS=$netnspath CNI_IFNAME=eth0 CNI_PATH=~/cni/bin ~/cni/bin/bridge < bridge.json
+{
+    "cniVersion": "0.4.0",
+    "interfaces": [
+        {
+            "name": "mynet0",
+            "mac": "a2:a9:fd:96:07:42"
+        },
+        {
+            "name": "vethb87c58d2",
+            "mac": "22:b7:cd:1a:2c:9a"
+        },
+        {
+            "name": "eth0",
+            "mac": "3a:ce:9f:3d:8f:27",
+            "sandbox": "/proc/54163/ns/net"
+        }
+    ],
+    "ips": [
+        {
+            "version": "4",
+            "interface": 2,
+            "address": "10.10.0.2/16",
+            "gateway": "10.10.0.1"
+        }
+    ],
+    "routes": [
+        {
+            "dst": "0.0.0.0/0",
+            "gw": "10.10.0.1"
+        }
+    ],
+    "dns": {}
+}
+
+- # 检查网络，可以看到eth0
+$ nsenter -t $pid -n ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+2: eth0@if7: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default
+    link/ether 3a:ce:9f:3d:8f:27 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 10.10.0.2/16 brd 10.10.255.255 scope global eth0
+       valid_lft forever preferred_lft forever
+
+- # 添加路由
+$ ip route add 10.10.0.0/16 dev mynet0 src 10.10.0.1
+$ route
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+default         _gateway        0.0.0.0         UG    100    0        0 eno1
+10.10.0.0       0.0.0.0         255.255.0.0     U     0      0        0 mynet0
+link-local      0.0.0.0         255.255.0.0     U     1000   0        0 virbr0
+172.17.0.0      0.0.0.0         255.255.0.0     U     0      0        0 docker0
+192.168.1.0     0.0.0.0         255.255.255.0   U     100    0        0 eno1
+192.168.122.0   0.0.0.0         255.255.255.0   U     0      0        0 virbr0
+
+- # 访问nginx       
+$ curl -I 10.10.0.2
+HTTP/1.1 200 OK
+Server: nginx/1.21.1
+Date: Tue, 05 Oct 2021 03:15:21 GMT
+Content-Type: text/html
+Content-Length: 612
+Last-Modified: Tue, 06 Jul 2021 14:59:17 GMT
+Connection: keep-alive
+ETag: "60e46fc5-264"
+Accept-Ranges: bytes
+
+- # 清理,注意命令是DEL
+$ CNI_COMMAND=DEL CNI_CONTAINERID=$contid CNI_NETNS=$netnspath CNI_IFNAME=eth0 CNI_PATH=~/cni/bin ~/cni/bin/bridge < bridge.json
+$ docker stop nginx
+$ docker rm nginx
+
+```
+ 
 ### User Namespace
 
 - 终端1：
