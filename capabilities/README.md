@@ -148,10 +148,10 @@ DESCRIPTION
        process will remain unchanged.
 ```
 
-### 3. 可执行程序文件的Capabilities
+### 3. 可执行文件的Capabilities
 ---
 
-可执行文件的属性中有三个集合来保存三类 capabilities，它们分别是：
+可执行文件有三种capabilities（保存在文件属性里），它们分别是：
 
 * Permitted
 * Inheritable
@@ -162,7 +162,7 @@ DESCRIPTION
 2. Inheritable集合中的capabilites会与进程的Inheritable集合执行&操作，以确定进程在执行execve函数后哪些capabilites被继承。
 3. Effective是一个bit。如果设置为开启，那么在执行execve函数后，Permitted集合中新增的capabilities会自动出现在进程的Effective集合中。
 
-### 4. 进程的 Capabilities
+### 4. 进程的Capabilities
 ----
 
 进程有五种capabilities类型，
