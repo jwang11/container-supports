@@ -33,7 +33,8 @@ Open file a.txt with write ERROR
 }
 ```
 
-再试着写文件
+Reload apparmor，再试着写文件
 ```
+$ sudo /etc/init.d/apparmor reload
 $ ./test a.txt "yes"
 ```
