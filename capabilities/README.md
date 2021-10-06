@@ -148,3 +148,29 @@ DESCRIPTION
        process will remain unchanged.
 ```
 
+### 3. 可执行程序文件的Capabilities
+---
+
+可执行文件的属性中有三个集合来保存三类 capabilities，它们分别是：
+
+* Permitted
+* Inheritable
+* Effective
+
+在进程执行时，
+1. Permitted 集合中的 capabilites 自动被加入到进程的 Permitted 集合中。
+2. Inheritable集合中的capabilites会与进程的Inheritable集合执行&操作，以确定进程在执行execve函数后哪些capabilites被继承。
+3. Effective是一个bit。如果设置为开启，那么在执行execve函数后，Permitted集合中新增的capabilities会自动出现在进程的Effective集合中。
+
+### 4. 进程的 Capabilities
+----
+
+进程有五种capabilities类型，
+* Permitted
+* Inheritable
+* Effective
+* Bounding
+* Ambient
+
+相比文件apabilites，进程的capabilities多了两个集合，分别是Bounding和Ambient。
+/proc/[pid]/status 文件中包含了进程的五个Capabilities集合的信息，我们可以通过下面的命名查看当前进程的Capabilities信息：
