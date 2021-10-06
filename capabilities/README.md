@@ -1,7 +1,6 @@
-## Capabilities
-
 
 ### 1. Capabilities是什么?
+---
 
 * 在内核2.2之前
 
@@ -36,7 +35,7 @@
 | ... | ...  |
 
 ### 2. 如何使用capabilities?
-
+---
 - 命令行 - getcap命令和setcap 命令分别用来查看和设置程序文件的 capabilities属性。
 ```diff
 $ sudo setcap cap_setgid,cap_setuid+ep /bin/bash
