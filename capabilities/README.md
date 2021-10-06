@@ -31,6 +31,6 @@ CapEff: 00000000000000c0
 $ echo '0 1000 1' > /proc/16100/uid_map
 $ echo '0 1000 1' > /proc/16100/gid_map
 
-+ #命令中的ep分别表示Effective和Permitted集合(接下来会介绍)，
-+ +号表示把指定的 capabilities 添加到这些集合中，- 号表示从集合中移除(对于 Effective 来说是设置或者清除位)。
++ #命令中的ep分别表示Effective和Permitted集合
++ "+"号表示把指定的 capabilities添加到这些集合中，"-"号表示从集合中移除。
 ```
