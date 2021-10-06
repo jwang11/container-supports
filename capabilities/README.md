@@ -174,3 +174,13 @@ DESCRIPTION
 
 相比文件apabilites，进程的capabilities多了两个集合，分别是Bounding和Ambient。
 /proc/[pid]/status 文件中包含了进程的五个Capabilities集合的信息，我们可以通过下面的命名查看当前进程的Capabilities信息：
+```diff
+- P'(ambient)     = (file is privileged) ? 0 : P(ambient)
+- P'(permitted)   = (P(inheritable) & F(inheritable)) | (F(permitted) & cap_bset) | P'(ambient)
+- P'(effective)   = F(effective) ? P'(permitted) : P'(ambient)
+- P'(inheritable) = P(inheritable)
+
+P: 执行前的线程capabilities
+P':执行后的线程capabilities
+F：文件的capabilities
+```
