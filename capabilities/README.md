@@ -19,7 +19,7 @@
 | Capability | 描述   |
 | -------- | ------ |
 | CAP_AUDIT_CONTROL   | 启用和禁用内核审计；改变审计过滤规则；检索审计状态和过滤规则 |
-| CAP_AUDIT_READ    | 允许通过 multicast netlink 套接字读取审计日志  |
+| CAP_AUDIT_WRITE   | 将记录写入内核审计日志  |
 | CAP_CHOWN | 修改文件所有者的权限 |
 | CAP_IPC_LOCK | 允许锁定共享内存片段  |
 | CAP_KILL | 允许对不属于自己的进程发送信号  |
@@ -32,6 +32,7 @@
 | CAP_SYS_CHROOT | 允许使用 chroot() 系统调用  |
 | CAP_SYS_TIME | 允许改变系统时钟  |
 | CAP_SYS_TTY_CONFIG | 允许配置 TTY 设备  |
+| CAP_SYSLOG | 允许使用 syslog() 系统调用  |
 | ... | ...  |
 
 ### 2. 如何使用capabilities?
