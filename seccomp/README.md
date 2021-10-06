@@ -8,7 +8,38 @@ Seccomp是linux内核提供的沙箱机制，可以限制进程对系统调用�
 
 systemd，container都使用seccomp机制来限定对进程的对系统调用的访问权限
 
-## Docker缺省禁用的51个Syscall
+## Pass a profile for a container
+
+The default `seccomp` profile provides a sane default for running containers with
+seccomp and disables around 44 system calls out of 300+. It is moderately
+protective while providing wide application compatibility. The default Docker
+profile can be found
+[here](https://github.com/moby/moby/blob/master/profiles/seccomp/default.json).
+
+In effect, the profile is a allowlist which denies access to system calls by
+default, then allowlists specific system calls. The profile works by defining a
+`defaultAction` of `SCMP_ACT_ERRNO` and overriding that action only for specific
+system calls. The effect of `SCMP_ACT_ERRNO` is to cause a `Permission Denied`
+error. Next, the profile defines a specific list of system calls which are fully
+allowed, because their `action` is overridden to be `SCMP_ACT_ALLOW`. Finally,
+some specific rules are for individual system calls such as `personality`, and others, 
+to allow variants of those system calls with specific arguments.
+
+`seccomp` is instrumental for running Docker containers with least privilege. It
+is not recommended to change the default `seccomp` profile.
+
+When you run a container, it uses the default profile unless you override it
+with the `--security-opt` option. For example, the following explicitly
+specifies a policy:
+
+```console
+$ docker run --rm \
+             -it \
+             --security-opt seccomp=/path/to/seccomp/profile.json \
+             hello-world
+```
+
+## Docker缺省禁用的Syscall
 
 Docker's default seccomp profile is an allowlist which specifies the calls that
 are allowed. The table below lists the significant (but not all) syscalls that
