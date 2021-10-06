@@ -16,12 +16,31 @@
     Capabilites作为线程（进程）的属性存在，每个功能组可以独立启用和禁用。如此一来，权限检查的过程就变成了：<br>
 在执行特权操作时，如果进程的有效身份不是root，就去检查是否具有该特权操作所对应的 capabilites，并以此决定是否可以进行该特权操作。比如要向进程发送信号(kill())，就得具有 capability CAP_KILL；如果设置系统时间，就得具有 capability CAP_SYS_TIME。
 
+| Capability | 描述   |
+| -------- | ------ |
+| CAP_AUDIT_CONTROL   | 启用和禁用内核审计；改变审计过滤规则；检索审计状态和过滤规则 |
+| CAP_AUDIT_READ    | 允许通过 multicast netlink 套接字读取审计日志  |
+| CAP_CHOWN | 修改文件所有者的权限 |
+| CAP_IPC_LOCK | 允许锁定共享内存片段  |
+| CAP_KILL | 允许对不属于自己的进程发送信号  |
+| CAP_MAC_ADMIN | 允许 MAC 配置或状态更改  |
+| CAP_MKNOD | 允许使用 mknod() 系统调用  |
+| CAP_NET_ADMIN | 允许执行网络管理任务  |
+| CAP_NET_RAW | 允许使用原始套接字  |
+| CAP_SETUID | 允许改变进程的 UID  |
+| CAP_SYS_ADMIN | 允许执行系统管理任务，如加载或卸载文件系统、设置磁盘配额等  |
+| CAP_SYS_CHROOT | 允许使用 chroot() 系统调用  |
+| CAP_SYS_TIME | 允许改变系统时钟  |
+| CAP_SYS_TTY_CONFIG | 允许配置 TTY 设备  |
+| ... | ...  |
 
 ### 2. 如何使用capabilities?
 
 - 命令行 - getcap命令和setcap 命令分别用来查看和设置程序文件的 capabilities属性。
 ```diff
 $ sudo setcap cap_setgid,cap_setuid+ep /bin/bash
+$ sudo getcap /bin/bash
+/bin/bash = cap_setgid,cap_setuid+ep
 $ exec bash
 $ cat /proc/$$/status | egrep 'Cap(Inh|Prm|Eff)'
 CapInh: 0000000000000000
