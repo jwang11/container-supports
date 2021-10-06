@@ -34,7 +34,7 @@ Open file a.txt with write ERROR
 ```
 
 Reload apparmor，再试着写文件
-```
+```console
 $ sudo /etc/init.d/apparmor reload
 $ ./test a.txt "yes"
 ```
