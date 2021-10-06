@@ -53,3 +53,98 @@ $ echo '0 1000 1' > /proc/16100/gid_map
 + # 命令中的ep分别表示Effective和Permitted集合
 + # "+"号表示把指定的 capabilities添加到这些集合中，"-"号表示从集合中移除。
 ```
+- 编程
+```
+CAP_CLEAR(3)               Linux Programmer's Manual              CAP_CLEAR(3)
+
+NAME
+       cap_clear,  cap_clear_flag,  cap_get_flag,  cap_set_flag, cap_compare -
+       capability data object manipulation
+
+SYNOPSIS
+       #include <sys/capability.h>
+
+       int cap_clear(cap_t cap_p);
+
+       int cap_clear_flag(cap_t cap_p, cap_flag_t flag);
+
+       int cap_get_flag(cap_t cap_p, cap_value_t cap,
+                        cap_flag_t flag, cap_flag_value_t *value_p);
+
+       int cap_set_flag(cap_t cap_p, cap_flag_t flag, int ncap,
+                        const cap_value_t *caps, cap_flag_value_t value);
+
+       int cap_compare(cap_t cap_a, cap_t cap_b);
+
+DESCRIPTION
+       These functions work on a capability state held in working storage.  A  cap_t
+       holds  information  about the capabilities in each of the three sets, Permit‐
+       ted, Inheritable, and Effective.  Each capability in a set may be clear (dis‐
+       abled, 0) or set (enabled, 1).
+
+       These functions work with the following data types:
+
+       cap_value_t       identifies a capability, such as CAP_CHOWN.
+
+       cap_flag_t        identifies  one  of the three flags associated with a capa‐
+                         bility (i.e., it identifies one  of  the  three  capability
+                         sets).   Valid  values  for  this  type  are CAP_EFFECTIVE,
+                         CAP_INHERITABLE or CAP_PERMITTED.
+
+       cap_flag_value_t  identifies the setting  of  a  particular  capability  flag
+                         (i.e,  the  value  of a capability in a set).  Valid values
+                         for this type are CAP_CLEAR (0) or CAP_SET (1).
+       cap_clear() initializes the capability state in working storage identified by
+       cap_p so that all capability flags are cleared.
+
+       cap_clear_flag()  clears  all of the capabilities of the specified capability
+       flag, flag.
+
+       cap_get_flag() obtains the current value of the capability flag, flag, of the
+       capability,  cap, from the capability state identified by cap_p and places it
+       in the location pointed to by value_p.
+
+       cap_set_flag() sets the flag, flag, of each capability in the array  caps  in
+       the  capability  state  identified by cap_p to value.  The argument, ncap, is
+       used to specify the number of capabilities in the array, caps.
+
+       cap_compare() compares two full capability sets and, in the  spirit  of  mem‐
+       cmp(),  returns zero if the two capability sets are identical. A positive re‐
+       turn value, status, indicates there is a difference  between  them.  The  re‐
+       turned   value  carries  further  information  about  which  of  three  sets,
+       cap_flag_t flag, differ. Specifically, the macro CAP_DIFFERS  (status,  flag)
+       evaluates to non-zero if the returned status differs in its flag components.
+
+```
+
+```
+CAP_GET_PROC(3)            Linux Programmer's Manual           CAP_GET_PROC(3)
+
+NAME
+       cap_get_proc,  cap_set_proc  -  capability  manipulation  on
+       processes
+      
+SYNOPSIS       
+       #include <sys/capability.h>
+
+       cap_t cap_get_proc(void);
+
+       int cap_set_proc(cap_t cap_p);
+
+
+DESCRIPTION
+       cap_get_proc()  allocates  a  capability state in working storage, sets
+       its state to that of the calling process, and returns a pointer to this
+       newly  created capability state.  The caller should free any releasable
+       memory, when the capability state in working storage is no  longer  re‐
+       quired, by calling cap_free() with the cap_t as an argument.
+
+       cap_set_proc()  sets  the values for all capability flags for all capa‐
+       bilities to the capability state identified by cap_p.  The new capabil‐
+       ity  state of the process will be completely determined by the contents
+       of cap_p upon successful return from this function.   If  any  flag  in
+       cap_p is set for any capability not currently permitted for the calling
+       process, the function will  fail,  and  the  capability  state  of  the
+       process will remain unchanged.
+```
+
