@@ -1,55 +1,107 @@
-#include<stdio.h>
-#define _XOPEN_SOURCE
-#include<stdlib.h>
-#include<unistd.h>
-#include<sys/types.h>
-#include<sys/stat.h>
-#include<fcntl.h>
-#include<sys/ioctl.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <sys/types.h>
+#include <linux/limits.h>
+#include <pty.h> /* for openpty and forkpty */
+#include <utmp.h> /* for login_tty */
+#include <time.h>
 
-/* Chown the slave to the calling user.  */
-extern int grantpt (int __fd) __THROW;
+#define SLAVE_DEV_NAME_MAX_LEN       100
+#define PTY_BUFF_MAX_LEN             100
 
-/* Release an internal lock so the slave can be opened.
-   Call after grantpt().  */
-extern int unlockpt (int __fd) __THROW;
 
-/* Return the pathname of the pseudo terminal slave associated with
-   the master FD is open on, or NULL on errors.
-   The returned storage is good until the next call to this function.  */
-extern char *ptsname (int __fd) __THROW __wur;
-
-char buf[1]={'\0'};  //创建缓冲区，这里只需要大小为1字节
-int main()
+/*
+ * call opentty
+ * print any data read from ptmx
+ */
+int main(int argc, char *argv[])
 {
-    //创建master、slave对并解锁slave字符设备文件
-    int mfd = open("/dev/ptmx", O_RDWR);
-    grantpt(mfd);
-    unlockpt(mfd);
-    //查询并在控制台打印slave文件位置
-    fprintf(stderr, "%s\n", ptsname(mfd));
+    int mpty = 0;
+    int spty = 0;
+    char spty_name[SLAVE_DEV_NAME_MAX_LEN] = {0};
+    char *pname = NULL;
 
-    int pid=fork();//分为两个进程
-    if(pid)//父进程从master读字节，并写入标准输出中
+    int rv = 0;
+    int namelen = 0;
+
+    int n = 0;
+    char buf[PTY_BUFF_MAX_LEN] = {0};
+
+    fd_set rdfdset;
+
+    rv = openpty(&mpty, &spty, spty_name, NULL, NULL);
+
+    if (-1 == rv)
     {
-        while(1)
-        {
-            if(read(mfd,buf,1)>0)
-                write(1,buf,1);
-            else
-                sleep(1);
-        }
-    }
-    else//子进程从标准输入读字节，并写入master中
-    {
-        while(1)
-        {
-            if(read(0,buf,1)>0)
-                write(mfd,buf,1);
-            else
-                sleep(1);
-        }
+        perror("Failed to get a pty");
+        goto ERROR;
     }
 
-    return 0;
+    printf("Get a pty pair, FD -- master[%d] slave[%d]\n", mpty, spty);
+    printf("Slave name is:%s\n", spty_name);
+
+    /* Monitoring the pty master for reading */
+    FD_ZERO(&rdfdset);
+    FD_SET(mpty, &rdfdset);
+
+    while (1)
+    {
+        rv = select(mpty + 1, &rdfdset, NULL, NULL, NULL);
+
+        if (0 > rv)
+        {
+            perror("Failed to select");
+            goto ERROR;
+        }
+
+        if (FD_ISSET(mpty, &rdfdset))
+        {
+            /* Now data can be read from the pty master */
+            n = read(mpty, buf, PTY_BUFF_MAX_LEN);
+            if (0 < n)
+            {
+                int ii = 0;
+
+                memset(buf + n, 0, PTY_BUFF_MAX_LEN - n);
+
+                printf("-----------------------------------\n");
+                printf("Message from slave:\n");
+                printf("%s\n", buf);
+                printf("------%d bytes------\n\n", n);
+
+            }
+            else if (0 == n)
+            {
+                printf("No byte is read from the master\n");
+            }
+            else
+            {
+                perror("Failed to read the master");
+                goto ERROR;
+            }
+        }
+        else
+        {
+            printf("The master isn't readable!\n");
+            goto ERROR;
+        }
+    }
+
+
+ERROR:
+
+    if (0 < mpty)
+    {
+        close(mpty);
+    }
+
+    if (0 < spty)
+    {
+        close(spty);
+    }
+
+    return -1;
+
 }
