@@ -29,6 +29,11 @@ Open file a.txt with write ERROR
 
 /home/jwang/github/container-supports/apparmor/test {
   #include <abstractions/base>
-    /home/jwang/github/container-supports/apparmor/a.txt w，
+    /home/jwang/github/container-supports/apparmor/a.txt w,
 }
+```
+
+再试着写文件
+```
+$ ./test a.txt "yes"
 ```
