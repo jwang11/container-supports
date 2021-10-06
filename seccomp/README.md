@@ -8,7 +8,7 @@ Seccomp是linux内核提供的沙箱机制，可以限制进程对系统调用�
 
 systemd，container都使用seccomp机制来限定对进程的对系统调用的访问权限
 
-## Pass a profile for a container
+## Docker用指定的seccomp profile运行
 
 The default `seccomp` profile provides a sane default for running containers with
 seccomp and disables around 44 system calls out of 300+. It is moderately
