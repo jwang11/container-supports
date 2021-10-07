@@ -11,7 +11,7 @@
 
 为了避免混淆，只说了User，没有说Group。GID, EGID区别可以参照理解。
 
-## SID，PGID
+## SID（会话），PGID（进程组ID）
 > SID全称Session ID，会话ID <br>
 > PGID全称是Process Group ID，进程组ID
 
