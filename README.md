@@ -25,4 +25,9 @@ see [here](printid)
 
 ## Namespace命名空间
 
-理解Linux命名空间的[使用](namespace_handson.md)和[编程](namespace)
+理解Linux各种命名空间（PID，Mount，User，Network等）的[使用](namespace_handson.md)和[编程](namespace)
+
+
+## Cgroup控制组
+
+理解控制组（cpu, cpu-account）的[使用](cgroup)
