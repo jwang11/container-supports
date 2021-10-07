@@ -9,7 +9,7 @@ See [here](capabilities)
 
 ## Apparmor
 
-如何使用Apparmor限制app的权限，see [here]()
+如何使用Apparmor限制app的权限，see [here](apparmor_handson.md)
 
 ## Seccomp
 
@@ -76,3 +76,16 @@ see [here](printid)
 - bolt数据库
 
 [编程](golang)
+
+## systemd的socket activation
+
+- Systemd是一套用来管理主机上各个Daemon运行的工具, 开发目标是提供更优秀的框架以表示系统服务间的依赖关系，并依此实现系统初始化时服务的并行启动.
+- 如果Daemon B依赖Daemon A，那么常见的就是B启动时会向A发起连接。由于Daemon A和Daemon B通常在一台主机上, 因此它们之间的连接通常使用Unix Socket完成.
+- Socket activation的思想就是: Daemon B启动时其实并不需要Daemon A真正运行起来,它只需要Daemon A建立的socket处于listen状态就OK了。 而这个socket不必由Daemon A建立, 而是由systemd在系统初始化时就建立， 当Daemon B发起启动时发起连接，systemd再将Daemon A启动。
+
+## systemd的sd_notify
+
+systemd有一个本机基于套接字的healthcheck方法，sd_notify。
+
+sd_notify套接字机制在应用程序完全Ready时通知systemd系统，通过设置service配置里ype = notify以启用此功能.
+通常程序里会检查NOTIFY_SOCKET环境变量以获取名称,并在应用程序Ready后，把READY = 1写入该套接字.
