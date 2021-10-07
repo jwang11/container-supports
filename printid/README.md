@@ -135,10 +135,17 @@ $ jobs
 
 - setpgid
 ```code
- int setpgid(pid_t pid, pid_t pgid);
+NAME
+       setpgid - set process group
+
+SYNOPSIS
+       #include <sys/types.h>
+       #include <unistd.h>
+       
+       int setpgid(pid_t pid, pid_t pgid);
  
- DESCRIPTION
-      setpgid()  sets  the  PGID of the process specified by pid to pgid.  If
+DESCRIPTION
+       setpgid()  sets  the  PGID of the process specified by pid to pgid.  If
        pid is zero, then the process ID of the calling process  is  used.   If
        pgid is zero, then the PGID of the process specified by pid is made the
        same as its process ID.  If setpgid() is used to move  a  process  from
@@ -152,6 +159,12 @@ $ jobs
 
 - setuid
 ```code
+NAME
+       setuid - set user identity
+
+SYNOPSIS
+       #include <sys/types.h>
+       #include <unistd.h>
 
        int setuid(uid_t uid);
 
