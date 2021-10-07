@@ -1,8 +1,9 @@
 # ID的概念
 
 ## UID，EUID和SUID
-> UID 全称是 Real User ID，也可以写成RUID
+> UID 全称是 Real User ID，也可以写成RUID <br>
 > EUID 全称是Effective User ID
+>
 > SUID 全称是Saved set-user-ID 
 
 - UID，就是我们当前以哪个用户登录的，我们运行的程序的UID就是这个用户的ID。
