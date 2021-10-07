@@ -158,7 +158,7 @@ DESCRIPTION
 ```
 
 - setuid
-```code
+```diff
 NAME
        setuid - set user identity
 
@@ -173,8 +173,15 @@ DESCRIPTION
        calling process is privileged (more precisely: if the process  has  the
        CAP_SETUID  capability  in  its user namespace), the real UID and saved
        set-user-ID are also set.
-       
-       
+
++      // 在set-user-ID完成了工作后，通常setuid(getuid())设置使euid恢复到原来的uid
+       Under Linux, setuid() is implemented like the POSIX version with
+       the  _POSIX_SAVED_IDS feature.  This allows a set-user-ID (other
+       than root) program to drop all of its user privileges,  do  some
+       un-privileged  work,  and  then  reengage the original effective
+       user ID in a secure manner.
+
+
        If  the  user  is root or the program is set-user-ID-root, special care
        must be taken: setuid() checks the effective user ID of the caller  and
        if  it  is the superuser, all process-related user ID's are set to uid.
