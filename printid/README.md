@@ -106,7 +106,8 @@ $ jobs
     * 对于用管道符号“|”连接起来的命令，bash会将它们放到一个进程组中
 
 ### Nohup的背后
-nohup干了这么几件事：
+---
+为了把进程放到后台运行（不受tty影响），我们经常用nohup命令。其实，nohup干了这么几件事：
 
 * 将stdin重定向到/dev/null，于是程序读标准输入将会返回EOF
 * stdout和stderr重定向到nohup.out或者用户通过参数指定的文件，程序所有输出到stdout和stderr的内容将会写入该文件
@@ -114,9 +115,23 @@ nohup干了这么几件事：
 * 用exec启动指定的命令（nohup进程将会被新进程取代，但进程ID不变）
 
 有几点需要明白：
-* ohup程序不负责将进程放到后台，这也是为什么我们经常在nohup命令后面要加上符号“&”的原因
+* nohup程序不负责将进程放到后台，这也是为什么我们经常在nohup命令后面要加上符号“&”的原因
 * 于stdin、stdout和stderr都被重定向了，nohup启动的程序不会读写tty
 * 于stdin重定向到了/dev/null，程序读stdin的时候会收到EOF返回值
-* sssion leader退出后，该进程会收到SIGHUP信号，但由于nohup帮我们忽略了该信号，所以该进程不会退出
+* session leader（如bash）退出后，该进程会收到SIGHUP信号，但由于nohup帮我们忽略了该信号，所以该进程不会退出，但依然属于该Session
 
-由于session leader已经退出，而nohup启动的进程属于该session，于是出现了一种情况，那就是通过nohup启动的这个进程组所在的session没有leader，
+### Daemon
+---
+
+通过nohup，就可以实现让进程在后台一直执行的功能，为什么我们还要写deamon进程呢？
+
+从上面的nohup的介绍中可以看出来，虽然进程是在后台执行，但进程跟当前session还是有着千丝万缕的关系，至少其父进程还是被session管着的，所以我们还是需要一个跟任何session都没有关系的进程来实现deamon的功能。实现deamon进程的大概步骤如下：
+
+* 调用fork生成一个新进程，然后原来的进程退出，这样新进程就变成了孤儿进程，于是被init进程接收，这样新进程就和调用进程没有父子关系了。
+* 调用setsid，创建新的session，新进程将成为新session的leader，同时该新session不和任何tty关联。
+* 切换当前工作目录到其它地方，一般是切换到根目录，这样就取消了对原工作目录的引用，如果原工作目录是某个挂载点下面的目录，这样就不会影响该挂载点的卸载。
+* 关闭一些从父进程继承过来而自己不需要的fd，避免不小心读写这些fd。
+* 重定向stdin、stdout和stderr，避免读写它们出现错误。
+
+### setsid，setuid和setpgid
+---
