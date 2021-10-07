@@ -30,4 +30,4 @@ see [here](printid)
 
 ## Cgroup控制组
 
-理解控制组（cpu, cpu-account）的[使用](cgroup)
+理解控制组（cpu, cpu-account）和systemd关系，以及[使用](cgroup_handson.md)
