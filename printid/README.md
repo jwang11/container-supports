@@ -16,7 +16,6 @@
 > PGID全称是Process Group ID，进程组ID
 
 ### 1. Session会话
----
 session就是一组进程组的集合，session id就是这个session中leader的进程ID。
 
 - session的特点
@@ -34,7 +33,6 @@ session可以在任何时候创建，调用setsid函数即可，session中的第
     * 启动deamon进程，这类进程需要和父进程划清界限，所以需要启动一个新的session(调用setsid)，而且不和tty关联。
 
 ### 2. PG 进程组
----
 进程组（process group）是一组进程的集合，进程组id就是这个进程组中leader的进程ID。
 
 * 进程组的特点
@@ -76,7 +74,6 @@ $ jobs
 ```
 
 ### 3. Session和进程组关系
----
 
 这里看一下shell作为session leader的情况，假设我们在shell里面执行了这些命令：
 ```console
