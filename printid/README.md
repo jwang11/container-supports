@@ -28,10 +28,10 @@ session的主要特点是当session的leader退出后，session中的所有其�
 session可以在任何时候创建，调用setsid函数即可，session中的第一个进程即为这个session的leader，leader是不能变的。常见的创建session的场景是：
 
     * 用户登录后，启动shell时将会创建新的session，shell会作为session的leader，随后shell里面运行的进程都将属于这个session，当shell退出后，所有该用户运行的进程将退出。
-    * 这类session一般都会和一个特定的tty关联，session的leader会成为tty的控制进程，当session的前端进程组发生变化时，
-    * 控制进程负责更新tty上关联的前端进程组，当tty要关闭的时候，控制进程所在session的所有进程都会收到SIGHUP信号。
-    * 启动deamon进程，这类进程需要和父进程划清界限(调用setsid)，所以需要启动一个新的session。这类session一般不会和任何tty关联。
-
+    * session一般都会和一个特定的tty关联，session的leader会成为tty的控制进程
+    * 当session里的进程组发生变化时，控制进程负责更新tty上进程组
+    * 当tty要关闭的时候，控制进程所在session的所有进程都会收到SIGHUP信号。
+    * 启动deamon进程，这类进程需要和父进程划清界限，所以需要启动一个新的session(调用setsid)，而且不和tty关联。
 
 ### 2. PG 进程组
 ---
@@ -80,7 +80,7 @@ $ jobs
 
 这里看一下shell作为session leader的情况，假设我们在shell里面执行了这些命令：
 ```console
-~$ sleep 100&
+$ sleep 100&
 [1] 7486
 $ cat |wc -l&
 [2] 7488
@@ -104,3 +104,19 @@ $ jobs
     * bash也是自己所在进程组的leader
     * bash会为自己启动的每个进程都创建一个新的进程组，所以这里sleep和jobs进程属于自己单独的进程组
     * 对于用管道符号“|”连接起来的命令，bash会将它们放到一个进程组中
+
+### Nohup的背后
+nohup干了这么几件事：
+
+* 将stdin重定向到/dev/null，于是程序读标准输入将会返回EOF
+* stdout和stderr重定向到nohup.out或者用户通过参数指定的文件，程序所有输出到stdout和stderr的内容将会写入该文件
+* 蔽掉SIGHUP信号
+* 用exec启动指定的命令（nohup进程将会被新进程取代，但进程ID不变）
+
+有几点需要明白：
+* ohup程序不负责将进程放到后台，这也是为什么我们经常在nohup命令后面要加上符号“&”的原因
+* 于stdin、stdout和stderr都被重定向了，nohup启动的程序不会读写tty
+* 于stdin重定向到了/dev/null，程序读stdin的时候会收到EOF返回值
+* sssion leader退出后，该进程会收到SIGHUP信号，但由于nohup帮我们忽略了该信号，所以该进程不会退出
+
+由于session leader已经退出，而nohup启动的进程属于该session，于是出现了一种情况，那就是通过nohup启动的这个进程组所在的session没有leader，
