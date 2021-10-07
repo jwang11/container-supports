@@ -132,3 +132,55 @@ $ jobs
 
 ## setsid，setuid和setpgid
 ---
+
+- setpgid
+```code
+ int setpgid(pid_t pid, pid_t pgid);
+ 
+ DESCRIPTION
+      setpgid()  sets  the  PGID of the process specified by pid to pgid.  If
+       pid is zero, then the process ID of the calling process  is  used.   If
+       pgid is zero, then the PGID of the process specified by pid is made the
+       same as its process ID.  If setpgid() is used to move  a  process  from
+       one  process  group to another (as is done by some shells when creating
+       pipelines), both process groups must be part of the same  session  (see
+       setsid(2) and credentials(7)).  In this case, the pgid specifies an ex‐
+       isting process group to be joined and the session ID of that group must
+       match the session ID of the joining process.
+
+```
+
+- setuid
+```code
+
+       int setuid(uid_t uid);
+
+DESCRIPTION
+       setuid()  sets  the  effective  user ID of the calling process.  If the
+       calling process is privileged (more precisely: if the process  has  the
+       CAP_SETUID  capability  in  its user namespace), the real UID and saved
+       set-user-ID are also set.
+       
+       
+       If  the  user  is root or the program is set-user-ID-root, special care
+       must be taken: setuid() checks the effective user ID of the caller  and
+       if  it  is the superuser, all process-related user ID's are set to uid.
+       After this has occurred, it is impossible for  the  program  to  regain
+       root privileges.
+
+```
+
+- setsid
+```code
+NAME
+       setsid - run a program in a new session
+
+SYNOPSIS
+       setsid [options] program [arguments]
+
+DESCRIPTION
+       setsid  runs  a  program in a new session. The command calls fork(2) if
+       already a process group leader.  Otherwise, it executes  a  program  in
+       the  current process.  This default behavior is possible to override by
+       the --fork option.
+```
