@@ -12,7 +12,7 @@
 为了避免混淆，只说了User，没有说Group。GID, EGID区别可以参照理解。
 
 ## SID，PGID
-> SID全称Session ID，会话ID
+> SID全称Session ID，会话ID <br>
 > PGID全称是Process Group ID，进程组ID
 
 ### 1. Session会话
@@ -105,8 +105,8 @@ $ jobs
     * bash会为自己启动的每个进程都创建一个新的进程组，所以这里sleep和jobs进程属于自己单独的进程组
     * 对于用管道符号“|”连接起来的命令，bash会将它们放到一个进程组中
 
-### Nohup的背后
----
+## Nohup的背后
+
 为了把进程放到后台运行（不受tty影响），我们经常用nohup命令。其实，nohup干了这么几件事：
 
 * 将stdin重定向到/dev/null，于是程序读标准输入将会返回EOF
@@ -120,7 +120,7 @@ $ jobs
 * 于stdin重定向到了/dev/null，程序读stdin的时候会收到EOF返回值
 * session leader（如bash）退出后，该进程会收到SIGHUP信号，但由于nohup帮我们忽略了该信号，所以该进程不会退出，但依然属于该Session
 
-### Daemon
+## Daemon
 ---
 
 通过nohup，就可以实现让进程在后台一直执行的功能，为什么我们还要写deamon进程呢？
@@ -133,5 +133,5 @@ $ jobs
 * 关闭一些从父进程继承过来而自己不需要的fd，避免不小心读写这些fd。
 * 重定向stdin、stdout和stderr，避免读写它们出现错误。
 
-### setsid，setuid和setpgid
+## setsid，setuid和setpgid
 ---
