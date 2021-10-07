@@ -1,7 +1,8 @@
 # Seccomp
 
 Seccomp是linux内核提供的沙箱机制，可以限制进程对系统调用的访问，从系统调用号，到系统调用的参数，都可以检查和限制
-有两种模式
+
+它有两种模式
 
 * SECCOMP_MODE_STRICT, 进程只能访问read,write,_exit,sigreturn系统调用
 * SECCOM_MODE_FILTER，通过设置bpf规则，来过滤和检查系统调用号，和系统调用参数，来决定对进程访问系统调用的处理
