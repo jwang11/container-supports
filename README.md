@@ -71,6 +71,14 @@ see [here](printid)
 ## Golang的高级编程
 
 - go gRPC
+    * gRPC全称是google Remote Procedure Call,是一个高性能、开源和通用的 RPC 框架，面向移动和 HTTP/2 设计。gRPC 基于 HTTP/2 标准设计，带来诸如双向流、流控、头部压缩、单 TCP 连接上的多复用请求等特性
+    * 服务接口和传递的消息均以protobuf的IDL语言统一描述：分别以service和message对象表示。protoc支持插件，grpc就是通过grpc插件来实现用protoc生成client和server的代码
+ ```
+ protoc -I helloworld/ helloworld/helloworld.proto --go_out=plugins=grpc:helloworld
+ ```
+    * Server端的主要代码实际上是一个接口。用户需要自己提供一个类，实现该接口，启动server时把这个类注册成这个服务的实现类。
+    * Protocol Buffers(简称Protobuf) ，是Google出品的序列化框架，与开发语言无关，和平台无关，具有良好的可扩展性。Protobuf和所有的序列化框架一样，都可以用于数据存储、通讯协议。Protobuf支持生成代码的语言包括Java、Python、C++、Go、JavaNano、Ruby、C#, Portobuf的序列化的结果体积要比XML、JSON小很多，XML和JSON的描述信息太多了，导致消息要大；此外Portobuf还使用了Varint 编码，减少数据对空间的占用。Portobuf序列化和反序列化速度比XML、JSON快很多，是直接把对象和字节数组做转换，而XML和JSON还需要构建成XML或者JSON对象结构。
+
 - Context
 - Struct和接口的继承
 - bolt数据库
