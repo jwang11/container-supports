@@ -81,7 +81,8 @@ see [here](printid)
  ```
 - Context
     * context包专门用来简化处理单个请求的多个goroutine之间与请求域的数据、取消信号、截止时间等相关操作。
-    * 控制goroutine的生命周期    
+    * 控制goroutine的生命周期
+- WaitGroup   
 - Struct和接口的继承
 - bolt数据库
     * Bolt是一个用Go编写的键值数据库。给程序提供一个简单、快捷、稳定的数据库。
